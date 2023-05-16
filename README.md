@@ -3,5 +3,4 @@
 ## Initial Installation
 
 - Requirement: Yarn
-- Command: `yarn install` or simply `yarn i`
-
+- Command: `yarn add` or simply `yarn`
