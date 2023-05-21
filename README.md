@@ -8,3 +8,9 @@
 ## Bootstrap Docs
 
 [Documentation Here](https://getbootstrap.com/docs/5.3/getting-started/vite/)
+
+## Database
+
+Located under `/src/frAllSpotsCSV.csv`\
+Provided by [GeoNames](https://www.geonames.org)\
+Codes in CSV explained at [here](https://www.geonames.org/export/codes.html)
