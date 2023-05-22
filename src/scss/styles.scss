@@ -1,5 +1,9 @@
 // Import all of Bootstrap's CSS
-@import "bootstrap/scss/bootstrap";
+$enable-gradients: true;
+$enable-shadows: true;
+$body-color: #AAAAAA;
+$body-bg: #000000;
 
-$body-color: #000000;
-$body-bg: #DDDDDD;
+$bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";

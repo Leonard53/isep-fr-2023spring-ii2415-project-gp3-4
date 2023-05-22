@@ -1,8 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/styles.css">
-    <title>T3 System</Title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>T3 System</title>
+    <link rel="stylesheet" href="./scss/styles.scss">
+    <script type="module" src="./js/main.js"></script>
   </head>
+  <body>
+    <div class="container py-4 px-3 mx-auto">
+      <form name="inputParam" autocomplete="off">
+        <div class="row">
+          <div class="col-1">
+            <i class="bi bi-arrow-down-circle-fill"></i> From:
+          </div>
+          <div class="col-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="From"
+              aria-label="From"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1"><i class="bi bi-chevron-bar-down"></i>To:</div>
+          <div class="col-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="To"
+              aria-label="To"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              Trip starts at <i class="bi bi-calendar-event"></i>
+            </div>
+            <div class="row">
+              <input
+                type="date"
+                class="form-control"
+                placeholder="StartDate"
+                aria-label="StartDate"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              Trip ends at <i class="bi bi-calendar-event"></i>
+            </div>
+            <div class="row">
+              <input
+                type="date"
+                class="form-control"
+                placeholder="EndDate"
+                aria-label="EndDate"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
 </html>
