@@ -4,7 +4,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.7",
-    "bootstrap": "^5.2.3"
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.5"
   },
   "devDependencies": {
     "eslint": ">=5.16.0",
