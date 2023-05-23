@@ -8,9 +8,9 @@
     "bootstrap-icons": "^1.10.5"
   },
   "devDependencies": {
-    "csv": "^6.3.0",
     "eslint": ">=5.16.0",
     "eslint-config-google": "^0.14.0",
+    "fast-csv": "^4.3.6",
     "sass": "^1.62.1",
     "vite": "^4.3.7"
   }

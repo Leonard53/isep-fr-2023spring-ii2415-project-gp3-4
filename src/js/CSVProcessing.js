@@ -1,6 +1,6 @@
-import 'fs';
-import {parse} from 'csv-parse';
-
+import * as fs from 'fs';
+import * as path from 'path';
+import * as csv from 'fast-csv';
 /* Format of CSV:
 geonameid         : integer id of record in geonames database
 name              : name of geographical point (utf8) varchar(200)
@@ -23,21 +23,18 @@ timezone          : the iana timezone id (see file timeZone.txt) varchar(40)
 modification date : date of last modification in yyyy-MM-dd format
 */
 
-class siteInfo{
-  constructor(siteName, longitude, latitude, city, catagories){
-
-  }
-  String siteName;
-  double longitude, latitude;
-  string city;
-}
-
+// class siteInfo {
+//   constructor(region, city, siteName, longitude, latitude, city, catagories) {
+//
+//   }
+// }
+//
 /** This function read the CSV file supplied,
  * split the objects into group in order to be processed later */
-export function readCSV() {
-  fs.createReadStream('../frAllSpotsCSV.csv')
-      .pipe(parse({delimiter: ','}))
-      .on('data', function(currentLine) {
-        console.log(currentLine);
-      });
+export default function readCSV() {
+  fs.createReadStream('../frAllMonumentsDataset.csv')
+      .pipe(csv.parse({headers: true}))
+      .on('error', (error) => console.error(error))
+      .on('data', (row) => console.log(row))
+      .on('end', (rowCount) => console.log(`Parsed ${rowCount} rows`));
 }
