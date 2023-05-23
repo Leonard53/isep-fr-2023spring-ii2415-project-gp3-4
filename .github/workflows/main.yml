@@ -1,6 +1,15 @@
-steps:
-- uses: actions/checkout@v3
-- uses: actions/setup-node@v3
-  with:
-    node-version: latest
-- run: npm start
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vite Compilation Testing
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - run: npm start
