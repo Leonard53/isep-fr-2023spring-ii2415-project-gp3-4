@@ -3,14 +3,21 @@ import '../scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
+//import {readCSV} from './CSVProcessing.js';
 
 let startDate = 0;
 let endDate = 0;
 
-// Helper function to update the date difference on screen
+/** Helper function to update the date difference on screen
+ *@param {string} startDate: starting date input by the user
+  @param {string} endDate: ending date input by the user
+ */
 function updateDate(startDate, endDate) {
-  const secondsDifference = endDate - startDate;
-  const actualDateDifference = secondsDifference / 1000 / 60 / 60 / 24; // miliseconds to day
+  const milisecondsDifference = endDate - startDate;
+  // miliseconds to day
+  const actualDateDifference = Math.floor(
+      milisecondsDifference / 1000 / 60 / 60 / 24,
+  );
   document.getElementById('displayDay').innerHTML = actualDateDifference;
 }
 
