@@ -3,7 +3,9 @@ import '../scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
-import readCSV from './CSVProcessing.js';
+import {readDataset, Site} from './datasetProcessing.js';
+
+const allSites = readDataset();
 
 let startDate = 0;
 let endDate = 0;
@@ -41,10 +43,3 @@ document.getElementById('endDate').addEventListener('change', function() {
     updateDate(startDate, endDate);
   }
 });
-
-document.getElementById('submissionBtn').addEventListener(
-    'click',
-    function() {
-      readCSV();
-    },
-);
