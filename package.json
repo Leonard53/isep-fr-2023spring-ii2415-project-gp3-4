@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "lint": "npx eslint --fix src/"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.7",
