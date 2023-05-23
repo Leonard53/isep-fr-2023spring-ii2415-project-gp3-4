@@ -1,68 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>T3 System</title>
-    <link rel="stylesheet" href="./scss/styles.scss">
+    <link rel="stylesheet" href="./scss/styles.scss" />
     <script type="module" src="./js/main.js"></script>
   </head>
   <body>
     <div class="container py-4 px-3 mx-auto">
       <form name="inputParam" autocomplete="off">
         <div class="row">
-          <div class="col-1">
-            <i class="bi bi-arrow-down-circle-fill"></i> From:
+          <div class="col-auto text-center">
+            <i class="bi bi-arrow-down-circle-fill"></i>
+            <label for="fromLocation" class="form-label"> From</label>
           </div>
-          <div class="col-4">
+          <div class="col-auto text-center">
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-lg"
               placeholder="From"
               aria-label="From"
             />
           </div>
         </div>
         <div class="row">
-          <div class="col-1"><i class="bi bi-chevron-bar-down"></i>To:</div>
-          <div class="col-4">
+          <div class="col-auto">
+            <i class="bi bi-chevron-bar-down"></i>
+            <label for="fromLocation" class="form-label"> To</label>
+          </div>
+          <div class="col-auto">
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-lg"
               placeholder="To"
               aria-label="To"
             />
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="row">
-              Trip starts at <i class="bi bi-calendar-event"></i>
+        <div class="row-auto">
+          <div class="col-auto">
+            <div class="row-auto">
+              <i class="bi bi-calendar-event"></i> Trip starts at
             </div>
-            <div class="row">
+            <div class="row-auto">
               <input
                 type="date"
                 class="form-control"
-                placeholder="StartDate"
-                aria-label="StartDate"
+                id="startDate"
+                placeholder="startDate"
+                aria-label="startDate"
               />
             </div>
           </div>
-          <div class="col">
-            <div class="row">
-              Trip ends at <i class="bi bi-calendar-event"></i>
+          <div class="col-auto">
+            <div class="row-auto">
+              <i class="bi bi-calendar-event"></i> Trip ends at
             </div>
-            <div class="row">
+            <div class="row-auto">
               <input
                 type="date"
                 class="form-control"
-                placeholder="EndDate"
-                aria-label="EndDate"
+                id="endDate"
+                placeholder="endDate"
+                aria-label="endDate"
               />
             </div>
           </div>
         </div>
+        <div class="row-auto">
+          <div class="col-auto">
+            <label for="budgetSelection" class="form-label"
+              ><i class="bi bi-currency-exchange"></i> Budget</label
+            >
+            <input
+              type="range"
+              class="form-range"
+              id="budget"
+              name="budget"
+              min="100"
+              max="8000"
+              step="10"
+            />
+          </div>
+        </div>
+        <div class="row-auto text-center">
+          <button type="submit" class="btn btn-primary">Query</button>
+        </div>
       </form>
+    </div>
+    <h2>
+      <div class="bg-info text-white text-center">Statistical Conclusion</div>
+    </h2>
+    <div class="continer-sm text-center">
+      <table class="table table-dark table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Day(s)</th>
+            <th scope="col">Budget (Euros)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <th scope="row"><div id="displayDay">Uninitialized</div></th>
+          <th scope="row"><div id="displayBudget">Uninitialized</div></th>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>

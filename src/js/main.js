@@ -3,3 +3,34 @@ import '../scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
+
+let startDate = 0;
+let endDate = 0;
+
+// Helper function to update the date difference on screen
+function updateDate(startDate, endDate) {
+  const secondsDifference = endDate - startDate;
+  const actualDateDifference = secondsDifference / 1000 / 60 / 60 / 24; // miliseconds to day
+  document.getElementById('displayDay').innerHTML = actualDateDifference;
+}
+
+document.getElementById('budget').addEventListener('change', function() {
+  const budgetRead = document.getElementById('budget').value;
+  if (budgetRead) {
+    document.getElementById('displayBudget').innerHTML = budgetRead.toString();
+  }
+});
+
+document.getElementById('startDate').addEventListener('change', function() {
+  startDate = new Date(document.getElementById('startDate').value);
+  if (startDate && endDate) {
+    updateDate(startDate, endDate);
+  }
+});
+
+document.getElementById('endDate').addEventListener('change', function() {
+  endDate = new Date(document.getElementById('endDate').value);
+  if (startDate && endDate) {
+    updateDate(startDate, endDate);
+  }
+});
