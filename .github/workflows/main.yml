@@ -1,0 +1,17 @@
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out Branch
+        uses: actions/checkout@v3
+      - name: Setting up nodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Compilling with Vite
+        run: npm start
