@@ -3,7 +3,7 @@
 ## Initial Installation
 
 - Requirement: Yarn
-- Command: `yarn add` or simply `yarn`
+- Command: `yarn`
 
 ## Bootstrap Docs
 
@@ -11,9 +11,8 @@
 
 ## Database
 
-Located under `/src/frAllSpotsCSV.csv`\
-Provided by [GeoNames](https://www.geonames.org)\
-Codes in CSV explained at [here](https://www.geonames.org/export/codes.html)
+Located under `src/frAllMonumentsDataset.csv`\
+Provided by the government of France
 
 ## Local Preview
 
