@@ -31,6 +31,7 @@ modification date : date of last modification in yyyy-MM-dd format
 //
 /** This function read the CSV file supplied,
  * split the objects into group in order to be processed later */
+// BROKEN!
 export default function readCSV() {
   fs.createReadStream('../frAllMonumentsDataset.csv')
       .pipe(csv.parse({headers: true}))
