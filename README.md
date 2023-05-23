@@ -2,8 +2,17 @@
 
 ## Initial Installation
 
-- Requirement: Yarn
-- Command: `yarn`
+- Requirement: Yarn, git-lfs (Git Large File System)
+- Installaion (MacOS): `brew install node yarn git-lfs`
+- Command (Must run before proceeding!):
+
+``` bash
+    # To install node server dependencies
+    yarn
+
+    # To fetch the dataset from lfs
+    git lfs fetch
+```
 
 ## Bootstrap Docs
 
