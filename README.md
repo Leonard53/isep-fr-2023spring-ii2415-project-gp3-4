@@ -28,3 +28,8 @@ Provided by the government of France
 Execute the following command in terminal\
 `npm start`\
 The website will be compiled with Vite and launched on `http://127.0.0.1:8080/`
+
+## NOTE: BEFORE PUSHING
+
+Execute the following command to lint and format the code to keep some consistency\
+`yarn lint`
