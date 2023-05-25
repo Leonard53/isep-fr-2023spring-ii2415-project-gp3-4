@@ -67,7 +67,7 @@ export function readDataset() {
 
 /**
  *  @param {Site[]} allsite all the processed sites in an array format
- *  @return {string[]} all the regions that exist in the dataset
+ *  @return {string[]} allRegionTags all the regions that exist in the dataset
  */
 export function filterRegion(allsite) {
   const allRegionTags = [];
@@ -78,4 +78,19 @@ export function filterRegion(allsite) {
     }
   });
   return allRegionTags;
+}
+
+/**
+ *  @param {Site[]} allsite all the processed sites in an array format
+ *  @return {string[]} allPeriodTags the time period that exist in the dataset
+ */
+export function filterTimePeriod(allsite) {
+  const allPeriodTags = [];
+  allsite.map((site) => {
+    if (site.timePeriod && allPeriodTags.indexOf(site.timePeriod) < 0) {
+      // if the current time period of the site is not in the list of time period recorded before, add it into to allPeriodTags array
+      allPeriodTags.push(site.timePeriod);
+    }
+  });
+  return allPeriodTags;
 }

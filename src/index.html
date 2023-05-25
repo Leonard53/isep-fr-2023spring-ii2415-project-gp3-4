@@ -27,6 +27,24 @@
             </script>
           </div>
         </div>
+        <div class="row-auto border rounded-3 p-3 m-3">
+          <div
+            class="p-1 m-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center"
+            style="font-size: 1.1rem; color: indigo"
+          >
+            <i class="bi bi-hourglass-split"> </i>
+            Interested Time Period Selection
+          </div>
+          <div id="timePeriodSelection">
+            <script type="module">
+              import { getAllTimePeriodsHTMLForm } from "./js/main.js";
+              const checkBoxLocation = document.getElementById(
+                "timePeriodSelection"
+              );
+              checkBoxLocation.innerHTML = getAllTimePeriodsHTMLForm();
+            </script>
+          </div>
+        </div>
         <div class="row-auto">
           <div class="col-auto">
             <div class="row-auto">

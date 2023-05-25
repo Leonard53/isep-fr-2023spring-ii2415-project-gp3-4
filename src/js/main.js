@@ -3,7 +3,12 @@ import "../scss/styles.scss";
 
 // Import all of Bootstrap's JS
 import * as bootstrap from "bootstrap";
-import { filterRegion, readDataset, Site } from "./datasetProcessing.js";
+import {
+  filterRegion,
+  filterTimePeriod,
+  readDataset,
+  Site,
+} from "./datasetProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
@@ -44,12 +49,20 @@ function arrayToListOfCheckboxesHTML(arr) {
 }
 
 /**
- * This function returns the HTML code for creating a bunch of checkboxes for all the regions exist in the dataset for the creation of a proper form
+ * This function returns the HTML code for creating a bunch of checkboxes for all the regions that exist in the dataset for the creation of a proper form
  * @return {String} the HTML code for all the regions */
 export function getAllRegionsHTMLForm() {
   const allSites = readDataset();
   console.log(arrayToListOfCheckboxesHTML(filterRegion(allSites).sort()));
   return arrayToListOfCheckboxesHTML(filterRegion(allSites).sort());
+}
+
+/**
+ * This function returns the HTML code for creating a bunch of checkboxes for all the time regions all available sites that exist in the dataset for the creation of a proper form
+ * @return {String} the HTML code for all the regions */
+export function getAllTimePeriodsHTMLForm() {
+  const allSites = readDataset();
+  return arrayToListOfCheckboxesHTML(filterTimePeriod(allSites));
 }
 
 document.getElementById("budget").addEventListener("change", function () {
