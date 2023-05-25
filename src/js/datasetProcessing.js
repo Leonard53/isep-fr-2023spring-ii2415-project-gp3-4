@@ -83,13 +83,43 @@ export function filterRegion(allsite) {
 /**
  *  @param {Site[]} allsite all the processed sites in an array format
  *  @return {string[]} allPeriodTags the time period that exist in the dataset
+ * FILTER EXPLAINED:
+ * in the database, each site has either
+ * A) Numeral centuries with other random words;
+ * B) Only alphabatical time period; Or,
+ * C) Empty
+ * If the retrieved data is A, we first remove all characters except for 0-9 and space
+ * After that, we seperate the centuries list (if there are multiple centuries given in the database), and for each of the century number occured in the database, we compare the current century number to all the tags in allPeriodTags to see if the current century number we are processing is already in the tag. If not, add it, otherwise, continue to the next item.
+ *
+ * If the retrived data is B, we first remove all the accents of the time period, seperate the time period by semicolon, and repeat the comparsion process above
+ *
+ * If the retrived data does not match A or B, or in any of the above processes, fall into the C) catagory, the data is disregarded.
  */
 export function filterTimePeriod(allsite) {
   const allPeriodTags = [];
   allsite.map((site) => {
-    if (site.timePeriod && allPeriodTags.indexOf(site.timePeriod) < 0) {
-      // if the current time period of the site is not in the list of time period recorded before, add it into to allPeriodTags array
-      allPeriodTags.push(site.timePeriod);
+    if (site.timePeriod) {
+      const timePeriodProcessed = site.timePeriod.replace(/[^0-9\s]/g, "");
+      const currentTimePeriodNumeral = !!timePeriodProcessed; // if true, current site has numeric time period, otherwise: alphabatical only
+      if (currentTimePeriodNumeral) {
+        const allPresentCenturies = timePeriodProcessed.split(" ");
+        allPresentCenturies.map((currentCentury) => {
+          if (!currentCentury) return;
+          if (allPeriodTags.indexOf(currentCentury) < 0)
+            allPeriodTags.push(currentCentury);
+        });
+      } else if (!currentTimePeriodNumeral) {
+        const noAccentTimePeriod = site.timePeriod
+          .normalize("NFD")
+          .replace(/\p{Diacritic}/gu, "");
+        const allAlphanumericTimePeriod = noAccentTimePeriod.split(";");
+        allAlphanumericTimePeriod.map((currentTimePeriod) => {
+          if (!currentTimePeriod) return;
+          if (allPeriodTags.indexOf(currentTimePeriod) < 0) {
+            allPeriodTags.push(currentTimePeriod);
+          }
+        });
+      }
     }
   });
   return allPeriodTags;
