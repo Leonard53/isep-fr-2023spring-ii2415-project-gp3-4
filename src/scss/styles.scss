@@ -1,18 +1,9 @@
-@import "../node_modules/bootstrap/scss/functions";
 // Import all of Bootstrap's CSS
 $enable-gradients: true;
 $enable-shadows: true;
 $enable-transitions: true;
-$body-color: #AAAAAA;
-$body-bg: #000000;
+// $body-color: #eeeeee;
+// $body-bg: #000000;
 
 $bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
-@import "../node_modules/bootstrap/scss/variables";
-@import "bootstrap-icons/font/bootstrap-icons";
-@import "../node_modules/bootstrap/scss/maps";
-@import "../node_modules/bootstrap/scss/mixins";
-@import "../node_modules/bootstrap/scss/root";
-@import "../node_modules/bootstrap/scss/utilities";
-@import "../node_modules/bootstrap/scss/images";
-@import "../node_modules/bootstrap/scss/containers";
-@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/bootstrap";

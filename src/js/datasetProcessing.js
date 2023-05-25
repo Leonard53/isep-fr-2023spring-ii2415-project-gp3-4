@@ -1,9 +1,8 @@
-import fileJSON from '../frAllMonumentsDataset.json';
+import fileJSON from "../frAllMonumentsDataset.json";
 
 /** A class that store the information of a tourist site */
 export class Site {
   /**
-   *
    * @param {string} siteName name of the site
    * @param {string} commune commune of this site
    * @param {string} region region of this site
@@ -13,13 +12,13 @@ export class Site {
    * @param {double} latitude latitude of this site
    */
   constructor(
-      siteName,
-      commune,
-      region,
-      timePeriod,
-      historyDescription,
-      longtitude,
-      latitude,
+    siteName,
+    commune,
+    region,
+    timePeriod,
+    historyDescription,
+    longtitude,
+    latitude
   ) {
     this.siteName = siteName;
     this.commune = commune;
@@ -34,7 +33,7 @@ export class Site {
 /** This function read the CSV file supplied,
  * split the objects into group in order to be processed later
  * @return {Site[]} allSites all the tourist sites in the JSON file
- * */
+ */
 export function readDataset() {
   const allSites = [];
   fileJSON.map((currentSite) => {
@@ -47,21 +46,36 @@ export function readDataset() {
     const locationDetails = actualData.p_coordonnees;
     let longtitude = 0;
     let latitude = 0;
-    locationDetails ?
-      ([longtitude, latitude] = locationDetails) :
-      ([longtitude, latitude] = [0, 0]);
+    locationDetails
+      ? ([longtitude, latitude] = locationDetails)
+      : ([longtitude, latitude] = [0, 0]);
     allSites.push(
-        new Site(
-            siteName,
-            commune,
-            region,
-            timePeriod,
-            historyDescription,
-            longtitude,
-            latitude,
-        ),
+      new Site(
+        siteName,
+        commune,
+        region,
+        timePeriod,
+        historyDescription,
+        longtitude,
+        latitude
+      )
     );
   });
   console.log(allSites);
   return allSites;
+}
+
+/**
+ *  @param {Site[]} allsite all the processed sites in an array format
+ *  @return {string[]} all the regions that exist in the dataset
+ */
+export function filterRegion(allsite) {
+  const allRegionTags = [];
+  allsite.map((site) => {
+    if (site.region && allRegionTags.indexOf(site.region) < 0) {
+      // if the current region is not in the list of regions recorded before, add it into to allRegionTags array
+      allRegionTags.push(site.region);
+    }
+  });
+  return allRegionTags;
 }
