@@ -53,7 +53,6 @@ function arrayToListOfCheckboxesHTML(arr) {
  * @return {String} the HTML code for all the regions */
 export function getAllRegionsHTMLForm() {
   const allSites = readDataset();
-  console.log(arrayToListOfCheckboxesHTML(filterRegion(allSites).sort()));
   return arrayToListOfCheckboxesHTML(filterRegion(allSites).sort());
 }
 
@@ -62,7 +61,7 @@ export function getAllRegionsHTMLForm() {
  * @return {String} the HTML code for all the regions */
 export function getAllTimePeriodsHTMLForm() {
   const allSites = readDataset();
-  return arrayToListOfCheckboxesHTML(filterTimePeriod(allSites));
+  return arrayToListOfCheckboxesHTML(filterTimePeriod(allSites).sort());
 }
 
 document.getElementById("budget").addEventListener("change", function () {
