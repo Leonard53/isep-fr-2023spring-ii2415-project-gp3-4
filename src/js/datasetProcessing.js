@@ -30,6 +30,23 @@ export class Site {
   }
 }
 
+/** The following function checks if the input string is empty or contains only whitespace
+ * @param {String} strCheck the string to be checked
+ * @return {boolean} true if it is empty, false otherwise
+ */
+function checkEmptyString(strCheck) {
+  return !strCheck || strCheck == String.fromCharCode(160);
+}
+
+/** The following function takes in a string, and return the input string without any accented character, such as those in French
+ * @param {String} originalStr the original string to be processed
+ * @return {String} the original string without the accented character
+ */
+function removeAccentedCharacter(originalStr) {
+  if (checkEmptyString(originalStr)) return "";
+  return originalStr.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
 /** The following functions will split a raw, unprocessed string of time period into an array of string.
  * in the database, each site has either
  * A) Numeral centuries with other random words;
@@ -53,7 +70,7 @@ function seperateTimePeriod(rawString) {
   if (currentTimePeriodNumeral) {
     const allPresentCenturies = numeralOnly.split(" ");
     allPresentCenturies.forEach((currentCentury) => {
-      if (!currentCentury || currentCentury == String.fromCharCode(160)) return; // char code 160 stands for the &nbsp character, which is a white space character
+      if (checkEmptyString(currentCentury)) return; // char code 160 stands for the &nbsp character, which is a white space character
       if (
         processedString.indexOf(currentCentury) < 0 &&
         currentCentury.length <= 2
@@ -62,19 +79,31 @@ function seperateTimePeriod(rawString) {
         processedString.push(currentCentury);
     });
   } else if (!currentTimePeriodNumeral) {
-    const noAccentTimePeriod = rawString
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "");
+    const noAccentTimePeriod = removeAccentedCharacter(rawString);
     const allAlphanumericTimePeriod = noAccentTimePeriod.split(";");
     allAlphanumericTimePeriod.forEach((currentTimePeriod) => {
-      if (!currentTimePeriod || currentTimePeriod == String.fromCharCode(160))
-        return;
+      if (checkEmptyString(currentTimePeriod)) return;
       if (processedString.indexOf(currentTimePeriod) < 0) {
         processedString.push(currentTimePeriod);
       }
     });
   }
   return processedString;
+}
+
+/** The following function will seperate sites with multiple regions, which is seperated with a semicolon in the original string
+ * @param {String} rawString the original string to be processed
+ * @return {String[]} the processed string that is an array of string with all the regions presented in the original string
+ */
+function seperateRegions(rawString) {
+  if (checkEmptyString(rawString)) return [];
+  const allRegions = [];
+  rawString.split(";").forEach((currentRegion) => {
+    if (allRegions.indexOf(currentRegion) < 0) {
+      allRegions.push(currentRegion);
+    }
+  });
+  return allRegions;
 }
 
 /** This function read the CSV file supplied,
@@ -86,8 +115,8 @@ export function readDataset() {
   fileJSON.map((currentSite) => {
     const actualData = currentSite.fields;
     const siteName = actualData.appellation_courante;
-    const commune = actualData.commune;
-    const region = actualData.region;
+    const commune = removeAccentedCharacter(actualData.commune);
+    const region = seperateRegions(removeAccentedCharacter(actualData.region));
     const timePeriod = seperateTimePeriod(actualData.siecle);
     const historyDescription = actualData.historique;
     const locationDetails = actualData.p_coordonnees;
@@ -118,10 +147,14 @@ export function readDataset() {
 export function filterRegion(allsite) {
   const allRegionTags = [];
   allsite.forEach((site) => {
-    if (site.region && allRegionTags.indexOf(site.region) < 0) {
-      // if the current region is not in the list of regions recorded before, add it into to allRegionTags array
-      allRegionTags.push(site.region);
-    }
+    site.region.forEach((currentRegion) => {
+      if (
+        !checkEmptyString(currentRegion) &&
+        allRegionTags.indexOf(currentRegion) < 0
+      ) {
+        allRegionTags.push(currentRegion);
+      }
+    });
   });
   return allRegionTags;
 }
@@ -135,7 +168,10 @@ export function filterTimePeriod(allsite) {
   allsite.forEach((site) => {
     site.timePeriod.forEach((currentTimePeriod) => {
       if (/^[0-9]+$/.test(currentTimePeriod)) currentTimePeriod += " Century"; // Add a "Century" keyword for better display, does not altered the actual data in the Site class
-      if (currentTimePeriod && allPeriodTags.indexOf(currentTimePeriod) < 0) {
+      if (
+        !checkEmptyString(currentTimePeriod) &&
+        allPeriodTags.indexOf(currentTimePeriod) < 0
+      ) {
         allPeriodTags.push(currentTimePeriod);
       }
     });
