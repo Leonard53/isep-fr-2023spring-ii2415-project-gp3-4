@@ -9,6 +9,7 @@ import {
   readDataset,
   Site,
 } from "./datasetProcessing.js";
+import { formValidation } from "./queryProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
@@ -88,5 +89,11 @@ document.getElementById("endDate").addEventListener("change", function () {
   endDate = new Date(document.getElementById("endDate").value);
   if (startDate && endDate) {
     updateDate(startDate, endDate);
+  }
+});
+
+document.getElementById("submissionBtn").addEventListener("click", function () {
+  console.log("BRUH");
+  if (formValidation()) {
   }
 });
