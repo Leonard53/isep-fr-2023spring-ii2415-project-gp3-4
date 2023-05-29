@@ -8,34 +8,41 @@
     <script type="module" src="./js/main.js"></script>
   </head>
   <body>
-    <div class="container py-4 px-3 mx-auto">
+    <div class="container p-3 mx-auto">
       <form name="inputParam" autocomplete="off">
-        <div class="row">
-          <div class="col-auto text-center">
-            <i class="bi bi-arrow-down-circle-fill"></i>
-            <label for="fromLocation" class="form-label"> From</label>
+        <div class="row-auto border rounded-3 p-3 m-3">
+          <div
+            class="p-1 m-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center"
+            style="font-size: 1.4rem; color: indigo"
+          >
+            <i class="bi bi-globe"> </i>
+            Region Selection
           </div>
-          <div class="col-auto text-center">
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              placeholder="From"
-              aria-label="From"
-            />
+          <div id="regionsSelection">
+            <script type="module">
+              import { getAllRegionsHTMLForm } from "./js/main.js";
+              const checkBoxLocation =
+                document.getElementById("regionsSelection");
+              checkBoxLocation.innerHTML = getAllRegionsHTMLForm();
+            </script>
           </div>
         </div>
-        <div class="row">
-          <div class="col-auto">
-            <i class="bi bi-chevron-bar-down"></i>
-            <label for="fromLocation" class="form-label"> To</label>
+        <div class="row-auto border rounded-3 p-3 m-3">
+          <div
+            class="p-1 m-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center"
+            style="font-size: 1.1rem; color: indigo"
+          >
+            <i class="bi bi-hourglass-split"> </i>
+            Interested Time Period Selection
           </div>
-          <div class="col-auto">
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              placeholder="To"
-              aria-label="To"
-            />
+          <div id="timePeriodSelection">
+            <script type="module">
+              import { getAllTimePeriodsHTMLForm } from "./js/main.js";
+              const checkBoxLocation = document.getElementById(
+                "timePeriodSelection"
+              );
+              checkBoxLocation.innerHTML = getAllTimePeriodsHTMLForm();
+            </script>
           </div>
         </div>
         <div class="row-auto">
