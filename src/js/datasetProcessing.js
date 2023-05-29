@@ -1,4 +1,4 @@
-import fileJSON from '../frAllMonumentsDataset.json';
+import fileJSON from "../frAllMonumentsDataset.json";
 
 /** A class that store the information of a tourist site */
 export class Site {
@@ -13,13 +13,13 @@ export class Site {
    * @param {double} latitude latitude of this site
    */
   constructor(
-      siteName,
-      commune,
-      region,
-      timePeriod,
-      historyDescription,
-      longtitude,
-      latitude,
+    siteName,
+    commune,
+    region,
+    timePeriod,
+    historyDescription,
+    longtitude,
+    latitude
   ) {
     this.siteName = siteName;
     this.commune = commune;
@@ -47,19 +47,19 @@ export function readDataset() {
     const locationDetails = actualData.p_coordonnees;
     let longtitude = 0;
     let latitude = 0;
-    locationDetails ?
-      ([longtitude, latitude] = locationDetails) :
-      ([longtitude, latitude] = [0, 0]);
+    locationDetails
+      ? ([longtitude, latitude] = locationDetails)
+      : ([longtitude, latitude] = [0, 0]);
     allSites.push(
-        new Site(
-            siteName,
-            commune,
-            region,
-            timePeriod,
-            historyDescription,
-            longtitude,
-            latitude,
-        ),
+      new Site(
+        siteName,
+        commune,
+        region,
+        timePeriod,
+        historyDescription,
+        longtitude,
+        latitude
+      )
     );
   });
   console.log(allSites);
