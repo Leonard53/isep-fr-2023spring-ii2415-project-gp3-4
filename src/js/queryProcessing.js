@@ -1,3 +1,10 @@
+import {
+  readDataset,
+  seperateRegions,
+  seperateTimePeriod,
+  Site,
+} from "./datasetProcessing.js";
+
 /** This function acts as an filter functions for HTMLCollections since there isn't a native version
  * @param {HTMLCollections} collection the HTMLCollections from getElementsByClassName or getElementsByName
  * @param {function(Any)} condition anonymous function that takes in a statement and output a boolean for the filter funciton
@@ -77,4 +84,59 @@ export function formValidation() {
     isValid = false;
   }
   return isValid;
+}
+
+/**
+ * This function calculator the distance between two sites using latitude and longitude
+ * @param {float} lat1 Latitude of site 1
+ * @param {float} lon1 Longitude of site 1
+ * @param {float} lat2 Latitude of site 2
+ * @param {float} lon2 Longitude of site 2
+ * @return {float} distance between site 1 and site 2 */
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+  return distance;
+}
+
+/**
+ * This function is the main algorithm the calculates the path of what the users should take
+ * @return {Site[]} the array of sites that the users should take, in that order */
+function getPlannedSites() {
+  // const userLat = parseFloat(document.getElementById("latitude").value);
+  // const userLon = parseFloat(document.getElementById("longitude").value);
+
+  // Array of sites with their latitude and longitude
+  const sites = readDataset();
+  const days = parseInt(document.getElementById("displayDay").innerHTML);
+  // Calculate the maximum number of sites that can be visited
+  const maxSites = Math.floor((days * 24) / 2);
+
+  // Calculate distances from user's location to each site
+  const distances = sites.map((site) => ({
+    name: site.siteName,
+    distance: calculateDistance(
+      userLat,
+      userLon,
+      site.latitude,
+      site.longitude
+    ),
+  }));
+
+  // Sort sites by distance in ascending order
+  distances.sort((a, b) => a.distance - b.distance);
+
+  // Generate the list of sites that can be visited within the given number of days
+  const plannedSites = distances.slice(0, maxSites).map((site) => site.name);
+
+  return plannedSites;
 }

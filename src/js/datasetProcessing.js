@@ -8,7 +8,7 @@ export class Site {
    * @param {string} region region of this site
    * @param {string[]} timePeriod time period of what this site represent
    * @param {string} historyDescription description of what this site is about
-   * @param {double} longtitude longtitude of this site
+   * @param {double} longitude longtitude of this site
    * @param {double} latitude latitude of this site
    */
   constructor(
@@ -17,7 +17,7 @@ export class Site {
     region,
     timePeriod,
     historyDescription,
-    longtitude,
+    longitude,
     latitude
   ) {
     this.siteName = siteName;
@@ -25,7 +25,7 @@ export class Site {
     this.region = region;
     this.timePeriod = timePeriod;
     this.historyDescription = historyDescription;
-    this.longtitude = longtitude;
+    this.longitude = longitude;
     this.latitude = latitude;
   }
 }
@@ -74,9 +74,10 @@ function seperateTimePeriod(rawString) {
       if (
         processedString.indexOf(currentCentury) < 0 &&
         currentCentury.length <= 2
-      )
+      ) {
         // For now, we ignore time period that are longer than 2 in size, meaning if a site has a time period in the format of a year, we will not be able to include that into the search algorithm
         processedString.push(currentCentury);
+      }
     });
   } else if (!currentTimePeriodNumeral) {
     const noAccentTimePeriod = removeAccentedCharacter(rawString);

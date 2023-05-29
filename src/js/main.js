@@ -93,7 +93,6 @@ document.getElementById("endDate").addEventListener("change", function () {
 });
 
 document.getElementById("submissionBtn").addEventListener("click", function () {
-  console.log("BRUH");
   if (formValidation()) {
   }
 });
