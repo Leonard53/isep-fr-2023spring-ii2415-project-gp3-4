@@ -10,7 +10,10 @@
   <body>
     <div class="container p-3 mx-auto">
       <form name="inputParam" autocomplete="off">
-        <div class="row-auto border rounded-3 p-3 m-3">
+        <div
+          class="row-auto border rounded-3 p-3 m-3"
+          id="masterRegionSelection"
+        >
           <div
             class="p-1 m-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center"
             style="font-size: 1.4rem; color: indigo"
@@ -27,7 +30,10 @@
             </script>
           </div>
         </div>
-        <div class="row-auto border rounded-3 p-3 m-3">
+        <div
+          class="row-auto border rounded-3 p-3 m-3"
+          id="masterTimePeriodSelection"
+        >
           <div
             class="p-1 m-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center"
             style="font-size: 1.1rem; color: indigo"
@@ -57,6 +63,9 @@
               placeholder="startDate"
               aria-label="startDate"
             />
+            <div class="invalid-feedback" id="startDateFeedback">
+              Indicate a start date
+            </div>
           </div>
           <div class="col-5 p-1">
             <label class="form-label">
@@ -70,6 +79,9 @@
                 placeholder="endDate"
                 aria-label="endDate"
               />
+              <div class="invalid-feedback" id="endDateFeedback">
+                Indicate an end date
+              </div>
             </div>
           </div>
         </div>
@@ -87,6 +99,7 @@
               max="8000"
               step="10"
             />
+            <div class="invalid-feedback">Indicate a budget</div>
           </div>
         </div>
         <div class="row-auto text-center">
