@@ -9,6 +9,7 @@ import {
   readDataset,
   Site,
 } from "./datasetProcessing.js";
+import { formValidation } from "./queryProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
@@ -28,14 +29,17 @@ function updateDate(startDate, endDate) {
 
 /**
  * @param {Any[]} arr Any types of array to be converted to Checkboxes in HTML format
+ * @param {String} type The type of what these checkboxes do, for form validation
  * @return {String} the HTML formatted string */
-function arrayToListOfCheckboxesHTML(arr) {
+function arrayToListOfCheckboxesHTML(arr, type = "") {
   let returnString = "";
   returnString += '<div class="row row-cols-4">\n';
   arr.map((elem) => {
     returnString += '<div class="col form-check">\n';
     returnString +=
-      '<input class="form-check-input" type="checkbox" value="" id="checkboxBox' +
+      '<input class="form-check-input ' +
+      type +
+      'Checkbox" type="checkbox" value="" id="' +
       elem +
       '">\n';
     returnString +=
@@ -53,7 +57,7 @@ function arrayToListOfCheckboxesHTML(arr) {
  * @return {String} the HTML code for all the regions */
 export function getAllRegionsHTMLForm() {
   const allSites = readDataset();
-  return arrayToListOfCheckboxesHTML(filterRegion(allSites).sort());
+  return arrayToListOfCheckboxesHTML(filterRegion(allSites).sort(), "regions");
 }
 
 /**
@@ -61,10 +65,13 @@ export function getAllRegionsHTMLForm() {
  * @return {String} the HTML code for all the regions */
 export function getAllTimePeriodsHTMLForm() {
   const allSites = readDataset();
-  return arrayToListOfCheckboxesHTML(filterTimePeriod(allSites).sort());
+  return arrayToListOfCheckboxesHTML(
+    filterTimePeriod(allSites).sort(),
+    "timePeriod"
+  );
 }
 
-document.getElementById("budget").addEventListener("change", function () {
+document.getElementById("budget").addEventListener("input", function () {
   const budgetRead = document.getElementById("budget").value;
   if (budgetRead) {
     document.getElementById("displayBudget").innerHTML = budgetRead.toString();
@@ -82,5 +89,11 @@ document.getElementById("endDate").addEventListener("change", function () {
   endDate = new Date(document.getElementById("endDate").value);
   if (startDate && endDate) {
     updateDate(startDate, endDate);
+  }
+});
+
+document.getElementById("submissionBtn").addEventListener("click", function () {
+  console.log("BRUH");
+  if (formValidation()) {
   }
 });
