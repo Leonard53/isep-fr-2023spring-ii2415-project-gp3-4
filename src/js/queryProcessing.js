@@ -25,13 +25,12 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 /** This class act as the basis of the entire graph network */
 class Node {
   /** @param {Site} siteInfo takes in a site object */
-  Node(siteInfo) {
+  constructor(siteInfo) {
     if (
-      checkEmptyString(siteInfo.node.longitude) ||
-      checkEmptyString(siteInfo.node.latitude)
-    ) {
+      checkEmptyString(siteInfo.longitude) ||
+      checkEmptyString(siteInfo.latitude)
+    )
       return; // reject sites with no longitude and latitude information
-    }
     this.node = siteInfo;
     this.edge = [];
   }
@@ -40,18 +39,18 @@ class Node {
 /** This class stored all the available nodes in the network */
 class Graph {
   /** @param {Node[]} allNodes array of Node object to be stored */
-  Graph(allNodes) {
+  constructor(allNodes) {
     this.allNodes = allNodes;
   }
 }
 
 /** This function computes the distances between all nodes in the graph network
- * @param {Graph} allNodes an object of graph. Note that the nodes in allNodes will be changed upon calling this function */
-function computeEdges(allNodes) {
-  allNodes.map((currentNode) => {
-    const everyOtherNodes = allNodes.filter(
-      (tempNode) => tempNode.siteInfo.siteName != currentNode.siteInfo.siteName
-    );
+ * @param {Graph} graph an object of graph. Note that the nodes in allNodes will be changed upon calling this function */
+function computeEdges(graph) {
+  graph.allNodes.map((currentNode) => {
+    const everyOtherNodes = graph.allNodes.filter((tempNode) => {
+      return tempNode.node.siteName != currentNode.node.siteName;
+    });
     // Computing distance between the current node and all the other node in the network
     everyOtherNodes.forEach((otherNode) => {
       const distance = parseFloat(
@@ -177,10 +176,13 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
     sitesInTimePeriods.forEach((otherSite) => {
       if (
         currentSite.siteName == otherSite.siteName &&
-        !sameSiteInBothArray([currentSite], matchingSitesFinal)
-      )
+        matchingSitesFinal
+          .map((site) => site.siteName)
+          .indexOf(currentSite.siteName) < 0
+      ) {
         // prevent duplicating sites in the final array
         matchingSitesFinal.push(currentSite);
+      }
     });
   });
   return matchingSitesFinal;
@@ -255,8 +257,9 @@ export function computePlan() {
     allSitesMatchRegions,
     allSitesMatchTimePeriod
   );
-  console.log(allSitesMatchBoth);
-  const nodes = allSitesMatchBoth.map((currentSite) => new Node(currentSite));
+  const nodes = allSitesMatchBoth
+    .map((currentSite) => new Node(currentSite))
+    .filter((currentNode) => Object.keys(currentNode).length > 0);
   const graph = new Graph(nodes);
   computeEdges(graph);
   return [];
