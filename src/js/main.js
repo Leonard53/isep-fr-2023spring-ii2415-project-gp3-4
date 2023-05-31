@@ -7,9 +7,8 @@ import {
   filterRegion,
   filterTimePeriod,
   readDataset,
-  Site,
 } from "./datasetProcessing.js";
-import { formValidation } from "./queryProcessing.js";
+import { computePlan, formValidation } from "./queryProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
@@ -94,5 +93,6 @@ document.getElementById("endDate").addEventListener("change", function () {
 
 document.getElementById("submissionBtn").addEventListener("click", function () {
   if (formValidation()) {
+    computePlan();
   }
 });

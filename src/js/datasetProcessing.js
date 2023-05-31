@@ -34,7 +34,7 @@ export class Site {
  * @param {String} strCheck the string to be checked
  * @return {boolean} true if it is empty, false otherwise
  */
-function checkEmptyString(strCheck) {
+export function checkEmptyString(strCheck) {
   return !strCheck || strCheck == String.fromCharCode(160);
 }
 
@@ -76,7 +76,7 @@ function seperateTimePeriod(rawString) {
         currentCentury.length <= 2
       ) {
         // For now, we ignore time period that are longer than 2 in size, meaning if a site has a time period in the format of a year, we will not be able to include that into the search algorithm
-        processedString.push(currentCentury);
+        processedString.push(currentCentury + " Century");
       }
     });
   } else if (!currentTimePeriodNumeral) {
@@ -168,7 +168,6 @@ export function filterTimePeriod(allsite) {
   const allPeriodTags = [];
   allsite.forEach((site) => {
     site.timePeriod.forEach((currentTimePeriod) => {
-      if (/^[0-9]+$/.test(currentTimePeriod)) currentTimePeriod += " Century"; // Add a "Century" keyword for better display, does not altered the actual data in the Site class
       if (
         !checkEmptyString(currentTimePeriod) &&
         allPeriodTags.indexOf(currentTimePeriod) < 0
