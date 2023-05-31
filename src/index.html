@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -109,10 +109,15 @@
         </div>
       </form>
     </div>
-    <h2>
-      <div class="bg-info text-white text-center">Statistical Conclusion</div>
-    </h2>
-    <div class="continer-sm text-center">
+    <div
+      class="row-auto p-2 m-2 border border-primary-subtle rounded-3 text-center"
+    >
+      <div
+        class="p-2 m-1 border border-primary-subtle text-pink-500"
+        style="font-size: 1.3rem; color: pink-500"
+      >
+        Statistical Conclusion
+      </div>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -121,10 +126,21 @@
           </tr>
         </thead>
         <tbody>
-          <th scope="row"><div id="displayDay">Uninitialized</div></th>
-          <th scope="row"><div id="displayBudget">Uninitialized</div></th>
+          <th scope="row-4"><div id="displayDay">Uninitialized</div></th>
+          <th scope="row-4"><div id="displayBudget">Uninitialized</div></th>
         </tbody>
       </table>
+    </div>
+    <div
+      class="row-auto p-2 border border-primary-subtle rounded-3 text-center planDisplay visible"
+    >
+      <div
+        class="p-2 m-1 border border-info-subtle rounded-3 text-center"
+        style="font-size: 1.5rem; color: teal"
+      >
+        <i class="bi bi-calendar2-check-fill"> </i>
+        Plan Summary
+      </div>
     </div>
   </body>
 </html>

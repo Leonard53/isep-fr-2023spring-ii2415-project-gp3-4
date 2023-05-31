@@ -1,11 +1,39 @@
-@import "../node_modules/bootstrap/scss/functions";
-// Import all of Bootstrap's CSS
 $enable-gradients: true;
 $enable-shadows: true;
 $enable-transitions: true;
 // $body-color: #eeeeee;
 // $body-bg: #000000;
-
 $bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
+// @import "../../node_modules/bootstrap/scss/bootstrap";
+
+$all-colors: map-merge-multiple(
+  $blues,
+  $indigos,
+  $purples,
+  $pinks,
+  $reds,
+  $oranges,
+  $yellows,
+  $greens,
+  $teals,
+  $cyans
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "color":
+      map-merge(
+        map-get($utilities, "color"),
+        (
+          values:
+            map-merge(
+              map-get(map-get($utilities, "color"), "values"),
+              ($all-colors)
+            ),
+        )
+      ),
+  )
+);
