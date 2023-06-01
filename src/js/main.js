@@ -8,12 +8,16 @@ import {
   filterTimePeriod,
   readDataset,
 } from "./datasetProcessing.js";
-import { computePlan, formValidation } from "./queryProcessing.js";
-import { doc } from "prettier";
+import {
+  computePlan,
+  formValidation,
+  sitesToCardOutputToHTML,
+} from "./queryProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
 const dataset = readDataset();
+console.log("MAIN.JS CALLED");
 
 /** Helper function to update the date difference on screen
  *@param {string} startDate: starting date input by the user
@@ -72,20 +76,46 @@ export function getAllTimePeriodsHTMLForm() {
   );
 }
 
+/** This function asserts the HTML element is visible
+ * @param {HTMLElement} htmlElem the element to be shown */
+async function assertVisibleElement(htmlElem) {
+  return new Promise((resolve) => {
+    htmlElem.classList.add("visible");
+    htmlElem.classList.remove("invisible");
+    resolve();
+  });
+}
+
+/** This function asserts the HTML element is invisible
+ * @param {HTMLElement} htmlElem the element to be hide */
+async function assertInvisibleElement(htmlElem) {
+  return new Promise((resolve) => {
+    htmlElem.classList.add("invisible");
+    htmlElem.classList.remove("visible");
+    resolve();
+  });
+}
+
 /** This function flips the visibility of an HTML element
  * @param {HTMLElement} htmlElem the element to be dealt with */
-export function flipVisibility(htmlElem) {
-  try {
-    if (htmlElem.hasAttribute("visible")) {
-      htmlElem.classList.remove("visible");
-      htmlElem.classList.add("invisible");
-    } else {
-      htmlElem.classList.remove("invisible");
-      htmlElem.classList.add("visible");
-    }
-  } catch (e) {
-    console.error(e);
-  }
+export async function flipVisibility(htmlElem) {
+  return new Promise((resolve, error) => {
+    setTimeout(() => {
+      try {
+        if (htmlElem.classList.contains("visible")) {
+          htmlElem.classList.remove("visible");
+          htmlElem.classList.add("invisible");
+        } else {
+          htmlElem.classList.remove("invisible");
+          htmlElem.classList.add("visible");
+        }
+        resolve();
+      } catch (e) {
+        console.error(e);
+        error(e);
+      }
+    }, 10);
+  });
 }
 
 document.getElementById("budget").addEventListener("input", function () {
@@ -109,14 +139,30 @@ document.getElementById("endDate").addEventListener("change", function () {
   }
 });
 
-document.getElementById("submissionBtn").addEventListener("click", function () {
-  flipVisibility(document.getElementById("planDisplay"));
-  if (formValidation()) {
-    window.scrollTo({
-      top: document.getElementById("planDisplay").offsetTop,
-      behavior: "smooth",
-    });
-    flipVisibility(document.getElementById("planningInProgressAlert"));
-    computePlan(dataset);
-  }
-});
+document
+  .getElementById("submissionBtn")
+  .addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (await formValidation()) {
+      await assertVisibleElement(document.getElementById("planDisplay"));
+      window.scrollTo({
+        top: document.getElementById("planDisplay").offsetTop,
+        behavior: "smooth",
+      });
+      await assertVisibleElement(
+        document.getElementById("planningInProgressAlert")
+      );
+      /** This function provide a way for the algorithm to finish running before executing other lines */
+      const planResult = await computePlan(dataset);
+      const planHTMLOutput = await sitesToCardOutputToHTML(planResult);
+      document.getElementById("resultDisplay").innerHTML = planHTMLOutput;
+      await assertInvisibleElement(
+        document.getElementById("planningInProgressAlert")
+      );
+      window.scrollTo({
+        top: document.getElementById("planDisplay").offsetTop,
+        behavior: "smooth",
+      });
+    }
+  });
