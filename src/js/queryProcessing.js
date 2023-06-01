@@ -1,7 +1,6 @@
 import {
   removeAccentedCharacter,
   checkEmptyString,
-  readDataset,
 } from "./datasetProcessing.js";
 
 /**
@@ -41,11 +40,20 @@ class Node {
   /** This function remove a specific node from the edge list of the current node
    * @param {Node} nodeToRemove the node to be removed from the edge */
   remoevFromEdge(nodeToRemove) {
-    this.edge = this.edge.filter(
-      (currentEdge) =>
-        removeAccentedCharacter(currentEdge.node.node.siteName) !=
+    for (let i = 0; i < this.edge.length; ++i) {
+      if (
+        removeAccentedCharacter(this.edge[i].node.node.siteName) ==
         removeAccentedCharacter(nodeToRemove.node.siteName)
-    );
+      ) {
+        const newEdgeFirstHalf = this.edge.slice(0, i);
+        const newEdgeSecondHalf = this.edge.slice(i + 1);
+        newEdgeSecondHalf.forEach((currentNode) =>
+          newEdgeFirstHalf.push(currentNode)
+        );
+        this.edge = newEdgeFirstHalf;
+        return;
+      }
+    }
   }
 }
 
@@ -112,10 +120,11 @@ function getDay() {
 }
 
 /** This function returns the array of sites that are in the specific regions
+ * @param {Site[]} dataset all sites that are parsed previously
  * @param {String[]} regions to be matched
  * @return {Site[]} the sites that is in the regions, all elements are unique */
-function getAllSitesFromRegions(regions) {
-  const allSites = readDataset();
+function getAllSitesFromRegions(dataset, regions) {
+  const allSites = dataset;
   return [
     ...new Set( // filter out duplicating sites
       regions.flatMap((currentRegion) =>
@@ -128,10 +137,11 @@ function getAllSitesFromRegions(regions) {
 }
 
 /** This function returns the array of sites that match the specific time periods / themes
+ * @param {Site[]} dataset all sites that are parsed previously
  * @param {String[]} timePeriods time periods / themes to be matched
  * @return {Site[]} the sites that match the time periods / themes, all elements are unique */
-function getAllSitesFromTimePeriod(timePeriods) {
-  const allSites = readDataset();
+function getAllSitesFromTimePeriod(dataset, timePeriods) {
+  const allSites = dataset;
   return [
     ...new Set( // filter out duplicating sites
       timePeriods.flatMap((currentTimePeriod) =>
@@ -174,17 +184,18 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
   const matchingSitesFinal = [];
   sitesInRegions.forEach((currentSite) => {
     sitesInTimePeriods.forEach((otherSite) => {
-      if (
-        currentSite.siteName == otherSite.siteName &&
-        matchingSitesFinal
-          .map((site) => site.siteName)
-          .indexOf(currentSite.siteName) < 0 // prevent duplicating sites in the final array
-      ) {
+      if (currentSite.siteName == otherSite.siteName) {
         matchingSitesFinal.push(currentSite);
       }
     });
   });
-  return matchingSitesFinal;
+  console.log("REACHED");
+  console.log(matchingSitesFinal.length);
+  const filterDuplication = matchingSitesFinal.filter(
+    (site, index, self) =>
+      index == self.findIndex((s) => site.siteName == s.siteName)
+  );
+  return filterDuplication;
 }
 
 /** this function valid the input from the form and return a boolean based on if all the inputs are valid or not
@@ -254,48 +265,103 @@ function computeTotalDistanceAllEdges(node) {
   return distanceCount;
 }
 
+/** This function updates the progress bar that indicate the progress of the algorithm
+ * @param {number} progress the progress of the algorithm, from 0 - 100 */
+function updateProgressBar(progress) {
+  // const progressBarMaster = document.getElementById("planningProgress");
+  const progressBarDisplay = document.getElementById("progressBarProgress");
+  // progressBarMaster.setAttribute("aria-valuenow", progress);
+  progressBarDisplay.style.width = progress.toString() + "%";
+  progressBarDisplay.innerHTML = progress.toString() + "%";
+}
+
 /** This function is the main entry of the algorithm
+ * @param {Site[]} dataset the parsed sites that was read in the beginning
  * @return {Site[]} all sites to be visited in that order */
-export function computePlan() {
-  const allSitesMatchRegions = getAllSitesFromRegions(getSelectedRegions());
-  const allSitesMatchTimePeriod = getAllSitesFromTimePeriod(
-    getSelectedTimePeriod()
-  );
-  const allSitesMatchBoth = filterSitesIntersection(
-    allSitesMatchRegions,
-    allSitesMatchTimePeriod
-  );
-  const nodes = allSitesMatchBoth
-    .map((currentSite) => new Node(currentSite))
-    .filter((currentNode) => Object.keys(currentNode).length > 0);
-  const graph = new Graph(nodes);
-  computeEdges(graph);
-  graph.allNodes.sort(
-    (currentNode, nextNode) =>
-      computeTotalDistanceAllEdges(currentNode) -
-      computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
-    // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
-  );
-  const perSiteExpense = 15;
-  const maxSitePerDay = 5;
-  const dayAvailable = getDay();
-  const budgetAvaiable = parseInt(document.getElementById("budget").value);
-  const maxSite = Math.round(
-    Math.min(budgetAvaiable / perSiteExpense, dayAvailable * maxSitePerDay)
-  );
-  if (maxSite <= 0) return [];
-  let currentNode = graph.allNodes[0];
-  const resultSites = [currentNode.node];
-  for (let i = 1; i < maxSite; ++i) {
-    graph.removeFromAllNodesEdge(currentNode);
-    const currentNodeEdgeSorted = currentNode.edge.sort(
-      (edgeCurrentNode, edgeNextNode) =>
-        edgeCurrentNode.node.distance - edgeNextNode.node.distance
+export function computePlan(dataset) {
+  const displayPlanArea = document.getElementById("planDisplay");
+  displayPlanArea.classList.remove("invisible");
+  displayPlanArea.classList.add("visible");
+  try {
+    const allSitesMatchRegions = getAllSitesFromRegions(
+      dataset,
+      getSelectedRegions()
     );
-    const nextToVisit = currentNodeEdgeSorted[0];
-    resultSites.push(nextToVisit.node.node);
-    currentNode = nextToVisit.node;
+    updateProgressBar(5);
+    setTimeout(() => {
+      const allSitesMatchTimePeriod = getAllSitesFromTimePeriod(
+        dataset,
+        getSelectedTimePeriod()
+      );
+      updateProgressBar(10);
+      setTimeout(() => {
+        const allSitesMatchBoth = filterSitesIntersection(
+          allSitesMatchRegions,
+          allSitesMatchTimePeriod
+        );
+        updateProgressBar(15);
+        setTimeout(() => {
+          const nodes = allSitesMatchBoth
+            .map((currentSite) => new Node(currentSite))
+            .filter((currentNode) => Object.keys(currentNode).length > 0);
+          updateProgressBar(30);
+          setTimeout(() => {
+            const graph = new Graph(nodes);
+            computeEdges(graph);
+            updateProgressBar(40);
+            setTimeout(() => {
+              graph.allNodes.sort(
+                (currentNode, nextNode) =>
+                  computeTotalDistanceAllEdges(currentNode) -
+                  computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
+                // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
+              );
+              updateProgressBar(60);
+              setTimeout(() => {
+                const perSiteExpense = 15;
+                const maxSitePerDay = 5;
+                const dayAvailable = getDay();
+                const budgetAvaiable = parseInt(
+                  document.getElementById("budget").value
+                );
+                const maxSite = Math.round(
+                  Math.min(
+                    budgetAvaiable / perSiteExpense,
+                    dayAvailable * maxSitePerDay,
+                    graph.allNodes.length
+                  )
+                );
+                if (maxSite <= 0) return [];
+                let currentNode = graph.allNodes[0];
+                const resultSites = [currentNode.node];
+                updateProgressBar(65);
+                setTimeout(() => {
+                  for (let i = 1; i < maxSite; ++i) {
+                    graph.removeFromAllNodesEdge(currentNode);
+                    const currentNodeEdgeSorted = currentNode.edge.sort(
+                      (edgeCurrentNode, edgeNextNode) =>
+                        edgeCurrentNode.node.distance -
+                        edgeNextNode.node.distance
+                    );
+                    const nextToVisit = currentNodeEdgeSorted[0];
+                    resultSites.push(nextToVisit.node.node);
+                    currentNode = nextToVisit.node;
+                  }
+                  updateProgressBar(100);
+                  setTimeout(() => {
+                    console.log(resultSites);
+                    return resultSites;
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  } catch (e) {
+    console.error(e);
+    displayPlanArea.classList.add("bg-error");
+    return [];
   }
-  console.log(resultSites);
-  return resultSites;
 }
