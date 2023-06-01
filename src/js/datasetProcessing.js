@@ -42,7 +42,7 @@ export function checkEmptyString(strCheck) {
  * @param {String} originalStr the original string to be processed
  * @return {String} the original string without the accented character
  */
-function removeAccentedCharacter(originalStr) {
+export function removeAccentedCharacter(originalStr) {
   if (checkEmptyString(originalStr)) return "";
   return originalStr.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 }

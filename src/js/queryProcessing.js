@@ -1,4 +1,8 @@
-import { checkEmptyString, readDataset } from "./datasetProcessing.js";
+import {
+  removeAccentedCharacter,
+  checkEmptyString,
+  readDataset,
+} from "./datasetProcessing.js";
 
 /**
  * This function calculator the distance between two sites using latitude and longitude
@@ -21,7 +25,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const distance = R * c;
   return distance;
 }
-
 /** This class act as the basis of the entire graph network */
 class Node {
   /** @param {Site} siteInfo takes in a site object */
@@ -32,7 +35,17 @@ class Node {
     )
       return; // reject sites with no longitude and latitude information
     this.node = siteInfo;
-    this.edge = [];
+    this.edge = []; // structure: {Node, Distance}
+  }
+
+  /** This function remove a specific node from the edge list of the current node
+   * @param {Node} nodeToRemove the node to be removed from the edge */
+  remoevFromEdge(nodeToRemove) {
+    this.edge = this.edge.filter(
+      (currentEdge) =>
+        removeAccentedCharacter(currentEdge.node.node.siteName) !=
+        removeAccentedCharacter(nodeToRemove.node.siteName)
+    );
   }
 }
 
@@ -41,6 +54,13 @@ class Graph {
   /** @param {Node[]} allNodes array of Node object to be stored */
   constructor(allNodes) {
     this.allNodes = allNodes;
+  }
+  /** This function calls each nodes in the graph to remove a specific node from their edges
+   * @param {Node} nodeToRemove the node to be removed from the edges of each node */
+  removeFromAllNodesEdge(nodeToRemove) {
+    this.allNodes.forEach((currentNode) => {
+      currentNode.remoevFromEdge(nodeToRemove);
+    });
   }
 }
 
@@ -260,16 +280,22 @@ export function computePlan() {
   const maxSitePerDay = 5;
   const dayAvailable = getDay();
   const budgetAvaiable = parseInt(document.getElementById("budget").value);
-  const maxSite =
-    Math.round(
-      Math.min(budgetAvaiable / perSiteExpense, dayAvailable / maxSitePerDay)
-    ) + 1;
+  const maxSite = Math.round(
+    Math.min(budgetAvaiable / perSiteExpense, dayAvailable * maxSitePerDay)
+  );
   if (maxSite <= 0) return [];
-  const startingNode = graph.allNodes[0];
-  const edgeSorted = startingNode.edge.sort();
-  const resultSites = [startingNode.node];
-  edgeSorted
-    .slice(0, maxSite)
-    .forEach((currentNode) => resultSites.push(currentNode.node.node));
+  let currentNode = graph.allNodes[0];
+  const resultSites = [currentNode.node];
+  for (let i = 1; i < maxSite; ++i) {
+    graph.removeFromAllNodesEdge(currentNode);
+    const currentNodeEdgeSorted = currentNode.edge.sort(
+      (edgeCurrentNode, edgeNextNode) =>
+        edgeCurrentNode.node.distance - edgeNextNode.node.distance
+    );
+    const nextToVisit = currentNodeEdgeSorted[0];
+    resultSites.push(nextToVisit.node.node);
+    currentNode = nextToVisit.node;
+  }
+  console.log(resultSites);
   return resultSites;
 }
