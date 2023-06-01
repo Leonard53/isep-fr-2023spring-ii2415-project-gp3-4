@@ -146,26 +146,6 @@ function getSelectedTimePeriod() {
   return timePeriodFiltered;
 }
 
-/** This function takes in two array of sites, and returns whether both array contains one or more common element or not
- * @param {Site[]} arr1 first array of site
- * @param {Site[]} arr2 second array of site
- * @return {boolean} commonElemFound if true, common elements are found between two array, else false */
-function sameSiteInBothArray(arr1, arr2) {
-  try {
-    const arr1SiteNames = arr1.map((currentSite) => currentSite.siteName);
-    const arr2SiteNames = arr2.map((currentSite) => currentSite.siteName);
-    arr1SiteNames.forEach((currentSite) => {
-      if (arr2SiteNames.indexOf(currentSite) >= 0) {
-        return true;
-      }
-    });
-    return false;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-}
-
 /** This function returns sites that only match both the region and the time period selection
  * @param {Site[]} sitesInRegions the sites that match the regions
  * @param {Site[]} sitesInTimePeriods the sites the match the time periods or themes
