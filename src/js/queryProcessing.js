@@ -189,8 +189,6 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
       }
     });
   });
-  console.log("REACHED");
-  console.log(matchingSitesFinal.length);
   const filterDuplication = matchingSitesFinal.filter(
     (site, index, self) =>
       index == self.findIndex((s) => site.siteName == s.siteName)
