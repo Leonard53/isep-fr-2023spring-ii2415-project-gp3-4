@@ -12,6 +12,7 @@ import { computePlan, formValidation } from "./queryProcessing.js";
 
 let startDate = 0;
 let endDate = 0;
+const dataset = readDataset();
 
 /** Helper function to update the date difference on screen
  *@param {string} startDate: starting date input by the user
@@ -55,7 +56,7 @@ function arrayToListOfCheckboxesHTML(arr, type = "") {
  * This function returns the HTML code for creating a bunch of checkboxes for all the regions that exist in the dataset for the creation of a proper form
  * @return {String} the HTML code for all the regions */
 export function getAllRegionsHTMLForm() {
-  const allSites = readDataset();
+  const allSites = dataset;
   return arrayToListOfCheckboxesHTML(filterRegion(allSites).sort(), "regions");
 }
 
@@ -63,7 +64,7 @@ export function getAllRegionsHTMLForm() {
  * This function returns the HTML code for creating a bunch of checkboxes for all the time regions all available sites that exist in the dataset for the creation of a proper form
  * @return {String} the HTML code for all the regions */
 export function getAllTimePeriodsHTMLForm() {
-  const allSites = readDataset();
+  const allSites = dataset;
   return arrayToListOfCheckboxesHTML(
     filterTimePeriod(allSites).sort(),
     "timePeriod"
@@ -93,6 +94,6 @@ document.getElementById("endDate").addEventListener("change", function () {
 
 document.getElementById("submissionBtn").addEventListener("click", function () {
   if (formValidation()) {
-    computePlan();
+    computePlan(dataset);
   }
 });

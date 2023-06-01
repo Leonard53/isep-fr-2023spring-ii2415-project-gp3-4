@@ -139,14 +139,33 @@
       </table>
     </div>
     <div
-      class="row-auto p-2 border border-primary-subtle rounded-3 text-center planDisplay visible"
+      class="row-auto p-2 m-3 border border-primary-subtle rounded-3 text-center invisible"
+      id="planDisplay"
     >
       <div
-        class="p-2 m-1 border border-info-subtle rounded-3 text-center"
+        class="p-2 m-2 border border-info-subtle rounded-3 text-center"
         style="font-size: 1.5rem; color: teal"
       >
         <i class="bi bi-calendar2-check-fill"> </i>
         Plan Summary
+      </div>
+      <div
+        class="progress"
+        role="progressbar"
+        aria-label="planningProgress"
+        aria-valuenow="0"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="height: 20px"
+        id="planningProgress"
+      >
+        <div
+          class="progress-bar text-center"
+          id="progressBarProgress"
+          style="width: 0%"
+        >
+          0%
+        </div>
       </div>
     </div>
   </body>
