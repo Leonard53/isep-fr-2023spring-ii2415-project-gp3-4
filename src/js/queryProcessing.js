@@ -178,9 +178,8 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
         currentSite.siteName == otherSite.siteName &&
         matchingSitesFinal
           .map((site) => site.siteName)
-          .indexOf(currentSite.siteName) < 0
+          .indexOf(currentSite.siteName) < 0 // prevent duplicating sites in the final array
       ) {
-        // prevent duplicating sites in the final array
         matchingSitesFinal.push(currentSite);
       }
     });
@@ -246,6 +245,15 @@ export function formValidation() {
   return isValid;
 }
 
+/** This funciton calculates the distance between itself and other nodes connected through edges.
+ * @param {Node} node the starting node
+ * @return {float} the total distance between itself and all other edges connected to the current node*/
+function computeTotalDistanceAllEdges(node) {
+  let distanceCount = 0;
+  node.edge.forEach((currentEdge) => (distanceCount += currentEdge.distance));
+  return distanceCount;
+}
+
 /** This function is the main entry of the algorithm
  * @return {Site[]} all sites to be visited in that order */
 export function computePlan() {
@@ -262,5 +270,11 @@ export function computePlan() {
     .filter((currentNode) => Object.keys(currentNode).length > 0);
   const graph = new Graph(nodes);
   computeEdges(graph);
+  graph.allNodes.sort(
+    (currentNode, nextNode) =>
+      computeTotalDistanceAllEdges(currentNode) -
+      computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
+    // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
+  );
   return [];
 }
