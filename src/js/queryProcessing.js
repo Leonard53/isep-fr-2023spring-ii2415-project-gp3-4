@@ -256,5 +256,20 @@ export function computePlan() {
       computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
     // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
   );
-  return [];
+  const perSiteExpense = 15;
+  const maxSitePerDay = 5;
+  const dayAvailable = getDay();
+  const budgetAvaiable = parseInt(document.getElementById("budget").value);
+  const maxSite =
+    Math.round(
+      Math.min(budgetAvaiable / perSiteExpense, dayAvailable / maxSitePerDay)
+    ) + 1;
+  if (maxSite <= 0) return [];
+  const startingNode = graph.allNodes[0];
+  const edgeSorted = startingNode.edge.sort();
+  const resultSites = [startingNode.node];
+  edgeSorted
+    .slice(0, maxSite)
+    .forEach((currentNode) => resultSites.push(currentNode.node.node));
+  return resultSites;
 }
