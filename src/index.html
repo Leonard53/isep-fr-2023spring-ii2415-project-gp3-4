@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>T3 System</title>
     <link rel="stylesheet" href="./scss/styles.scss" />
-    <script type="module" src="./js/main.js"></script>
   </head>
   <body>
     <div class="container p-3 mx-auto visible" id="mainInputForm">
@@ -160,7 +159,7 @@
         id="planningProgress"
       >
         <div
-          class="progress-bar text-center"
+          class="progress-bar progress-bar-striped progress-bar-animated text-center"
           id="progressBarProgress"
           style="width: 0%"
         >
@@ -183,9 +182,10 @@
         <div class="spinner-border spinner-border-sm text-dark" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
-        Generating your plan in progress, this might take a while if too many
-        preferences are chosen...
+        Generating your plan, this might take a while if too many preferences
+        are chosen...
       </div>
+      <div class="row row-cols-3 p-2 m-2" id="resultDisplay"></div>
     </div>
   </body>
 </html>

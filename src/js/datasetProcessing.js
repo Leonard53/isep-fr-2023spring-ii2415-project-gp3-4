@@ -35,7 +35,9 @@ export class Site {
  * @return {boolean} true if it is empty, false otherwise
  */
 export function checkEmptyString(strCheck) {
-  return !strCheck || strCheck == String.fromCharCode(160);
+  return (
+    !strCheck || strCheck == String.fromCharCode(160) || strCheck === undefined
+  );
 }
 
 /** The following function takes in a string, and return the input string without any accented character, such as those in French
@@ -76,9 +78,15 @@ function seperateTimePeriod(rawString) {
         currentCentury.length <= 2
       ) {
         // For now, we ignore time period that are longer than 2 in size, meaning if a site has a time period in the format of a year, we will not be able to include that into the search algorithm
-        processedString.push(currentCentury + " Century");
+        processedString.push(currentCentury);
       }
     });
+    return processedString
+      .sort(
+        (currentCentury, nextCentury) =>
+          parseInt(currentCentury) - parseInt(nextCentury)
+      )
+      .map((currentCentury) => currentCentury + " Century");
   } else if (!currentTimePeriodNumeral) {
     const noAccentTimePeriod = removeAccentedCharacter(rawString);
     const allAlphanumericTimePeriod = noAccentTimePeriod.split(";");
@@ -88,8 +96,8 @@ function seperateTimePeriod(rawString) {
         processedString.push(currentTimePeriod);
       }
     });
+    return processedString;
   }
-  return processedString;
 }
 
 /** The following function will seperate sites with multiple regions, which is seperated with a semicolon in the original string
@@ -138,7 +146,9 @@ export function readDataset() {
       )
     );
   });
-  return allSites;
+  return allSites.filter(
+    (currentSite) => !checkEmptyString(currentSite.historyDescription)
+  );
 }
 
 /**

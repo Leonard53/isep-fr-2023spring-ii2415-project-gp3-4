@@ -199,60 +199,62 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
 
 /** this function valid the input from the form and return a boolean based on if all the inputs are valid or not
  * @return {boolean} if true, the inputs of the form is valid, otherwise, false */
-export function formValidation() {
-  let isValid = true;
-  const allRegions = getSelectedRegions(); // At least one region must be checked
-  if (allRegions.length <= 0) {
-    isValid = false;
-    document
-      .getElementById("masterRegionSelection")
-      .classList.add("text-bg-danger");
-  } else {
-    document
-      .getElementById("masterRegionSelection")
-      .classList.remove("text-bg-danger");
-  }
-  const allTimePeriod = getSelectedTimePeriod(); // At least one time period must be checked
-  if (allTimePeriod.length <= 0) {
-    isValid = false;
-    document
-      .getElementById("masterTimePeriodSelection")
-      .classList.add("text-bg-danger");
-  } else {
-    document
-      .getElementById("masterTimePeriodSelection")
-      .classList.remove("text-bg-danger");
-  }
-  const startDateInput = document.getElementById("startDate");
-  if (checkEmptyString(startDateInput.value)) {
-    startDateInput.classList.add("is-invalid");
-    isValid = false;
-  }
-  const endDateInput = document.getElementById("endDate");
-  if (checkEmptyString(endDateInput.value)) {
-    endDateInput.classList.add("is-invalid");
-    isValid = false;
-  }
-  if (endDateInput.value < startDateInput.value) {
-    document.getElementById("endDateFeedback").innerHTML =
-      "End date must be set after the Start date";
-    document.getElementById("startDateFeedback").innerHTML =
-      "Start date must be set before the End date";
-    isValid = false;
-  } else {
-    const startDateFeedback = document.getElementById("startDateFeedback");
-    startDateFeedback.innerHTML = "Indicate a start date";
-    startDateFeedback.classList.remove("is-invalid");
-    const endDateFeedback = document.getElementById("endDateFeedback");
-    endDateFeedback.innerHTML = "Indicate an end date";
-    endDateFeedback.classList.remove("is-invalid");
-  }
-  const budgetInput = document.getElementById("budget");
-  if (!budgetInput.value) {
-    budgetInput.classList.add("is-invalid");
-    isValid = false;
-  }
-  return isValid;
+export async function formValidation() {
+  return new Promise((resolve) => {
+    let isValid = true;
+    const allRegions = getSelectedRegions(); // At least one region must be checked
+    if (allRegions.length <= 0) {
+      isValid = false;
+      document
+        .getElementById("masterRegionSelection")
+        .classList.add("text-bg-danger");
+    } else {
+      document
+        .getElementById("masterRegionSelection")
+        .classList.remove("text-bg-danger");
+    }
+    const allTimePeriod = getSelectedTimePeriod(); // At least one time period must be checked
+    if (allTimePeriod.length <= 0) {
+      isValid = false;
+      document
+        .getElementById("masterTimePeriodSelection")
+        .classList.add("text-bg-danger");
+    } else {
+      document
+        .getElementById("masterTimePeriodSelection")
+        .classList.remove("text-bg-danger");
+    }
+    const startDateInput = document.getElementById("startDate");
+    if (checkEmptyString(startDateInput.value)) {
+      startDateInput.classList.add("is-invalid");
+      isValid = false;
+    }
+    const endDateInput = document.getElementById("endDate");
+    if (checkEmptyString(endDateInput.value)) {
+      endDateInput.classList.add("is-invalid");
+      isValid = false;
+    }
+    if (endDateInput.value < startDateInput.value) {
+      document.getElementById("endDateFeedback").innerHTML =
+        "End date must be set after the Start date";
+      document.getElementById("startDateFeedback").innerHTML =
+        "Start date must be set before the End date";
+      isValid = false;
+    } else {
+      const startDateFeedback = document.getElementById("startDateFeedback");
+      startDateFeedback.innerHTML = "Indicate a start date";
+      startDateFeedback.classList.remove("is-invalid");
+      const endDateFeedback = document.getElementById("endDateFeedback");
+      endDateFeedback.innerHTML = "Indicate an end date";
+      endDateFeedback.classList.remove("is-invalid");
+    }
+    const budgetInput = document.getElementById("budget");
+    if (!budgetInput.value) {
+      budgetInput.classList.add("is-invalid");
+      isValid = false;
+    }
+    resolve(isValid);
+  });
 }
 
 /** This funciton calculates the distance between itself and other nodes connected through edges.
@@ -266,103 +268,132 @@ function computeTotalDistanceAllEdges(node) {
 
 /** This function updates the progress bar that indicate the progress of the algorithm
  * @param {number} progress the progress of the algorithm, from 0 - 100 */
-function updateProgressBar(progress) {
-  // const progressBarMaster = document.getElementById("planningProgress");
-  const progressBarDisplay = document.getElementById("progressBarProgress");
-  // progressBarMaster.setAttribute("aria-valuenow", progress);
-  progressBarDisplay.style.width = progress.toString() + "%";
-  progressBarDisplay.innerHTML = progress.toString() + "%";
+async function updateProgressBar(progress) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const progressBarDisplay = document.getElementById("progressBarProgress");
+      progressBarDisplay.style.width = progress.toString() + "%";
+      progressBarDisplay.innerHTML = progress.toString() + "%";
+      resolve();
+    });
+  });
 }
 
 /** This function is the main entry of the algorithm
  * @param {Site[]} dataset the parsed sites that was read in the beginning
  * @return {Site[]} all sites to be visited in that order */
-export function computePlan(dataset) {
-  try {
-    const allSitesMatchRegions = getAllSitesFromRegions(
-      dataset,
-      getSelectedRegions()
-    );
-    updateProgressBar(5);
-    setTimeout(() => {
+export async function computePlan(dataset) {
+  return new Promise(async (resolve, error) => {
+    try {
+      const allSitesMatchRegions = getAllSitesFromRegions(
+        dataset,
+        getSelectedRegions()
+      );
+      await updateProgressBar(5);
       const allSitesMatchTimePeriod = getAllSitesFromTimePeriod(
         dataset,
         getSelectedTimePeriod()
       );
-      updateProgressBar(10);
-      setTimeout(() => {
-        const allSitesMatchBoth = filterSitesIntersection(
-          allSitesMatchRegions,
-          allSitesMatchTimePeriod
+      await updateProgressBar(10);
+      const allSitesMatchBoth = filterSitesIntersection(
+        allSitesMatchRegions,
+        allSitesMatchTimePeriod
+      );
+      await updateProgressBar(15);
+      const nodes = allSitesMatchBoth
+        .map((currentSite) => new Node(currentSite))
+        .filter((currentNode) => Object.keys(currentNode).length > 0);
+      await updateProgressBar(30);
+      const graph = new Graph(nodes);
+      computeEdges(graph);
+      await updateProgressBar(40);
+      graph.allNodes.sort(
+        (currentNode, nextNode) =>
+          computeTotalDistanceAllEdges(currentNode) -
+          computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
+        // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
+      );
+      await updateProgressBar(60);
+      const perSiteExpense = 15;
+      const maxSitePerDay = 5;
+      const dayAvailable = getDay();
+      const budgetAvaiable = parseInt(document.getElementById("budget").value);
+      const maxSite = Math.round(
+        Math.min(
+          budgetAvaiable / perSiteExpense,
+          dayAvailable * maxSitePerDay,
+          graph.allNodes.length
+        )
+      );
+      if (maxSite <= 0) throw new Error();
+      let currentNode = graph.allNodes[0];
+      const resultSites = [currentNode.node];
+      await updateProgressBar(65);
+      for (let i = 1; i < maxSite; ++i) {
+        graph.removeFromAllNodesEdge(currentNode);
+        const currentNodeEdgeSorted = currentNode.edge.sort(
+          (edgeCurrentNode, edgeNextNode) =>
+            edgeCurrentNode.node.distance - edgeNextNode.node.distance
         );
-        updateProgressBar(15);
-        setTimeout(() => {
-          const nodes = allSitesMatchBoth
-            .map((currentSite) => new Node(currentSite))
-            .filter((currentNode) => Object.keys(currentNode).length > 0);
-          updateProgressBar(30);
-          setTimeout(() => {
-            const graph = new Graph(nodes);
-            computeEdges(graph);
-            updateProgressBar(40);
-            setTimeout(() => {
-              graph.allNodes.sort(
-                (currentNode, nextNode) =>
-                  computeTotalDistanceAllEdges(currentNode) -
-                  computeTotalDistanceAllEdges(nextNode) // If distance from currentNode is greater than distance from the nextNode, swap the order.
-                // The goal is to have the node that have the least total distance from all other nodes being the first node. This will determine the first site the user will need to visit
-              );
-              updateProgressBar(60);
-              setTimeout(() => {
-                const perSiteExpense = 15;
-                const maxSitePerDay = 5;
-                const dayAvailable = getDay();
-                const budgetAvaiable = parseInt(
-                  document.getElementById("budget").value
-                );
-                const maxSite = Math.round(
-                  Math.min(
-                    budgetAvaiable / perSiteExpense,
-                    dayAvailable * maxSitePerDay,
-                    graph.allNodes.length
-                  )
-                );
-                if (maxSite <= 0) return [];
-                let currentNode = graph.allNodes[0];
-                const resultSites = [currentNode.node];
-                updateProgressBar(65);
-                setTimeout(() => {
-                  for (let i = 1; i < maxSite; ++i) {
-                    graph.removeFromAllNodesEdge(currentNode);
-                    const currentNodeEdgeSorted = currentNode.edge.sort(
-                      (edgeCurrentNode, edgeNextNode) =>
-                        edgeCurrentNode.node.distance -
-                        edgeNextNode.node.distance
-                    );
-                    const nextToVisit = currentNodeEdgeSorted[0];
-                    resultSites.push(nextToVisit.node.node);
-                    currentNode = nextToVisit.node;
-                  }
-                  updateProgressBar(100);
-                  setTimeout(() => {
-                    console.log(resultSites);
-                    flipVisibility(
-                      document.getElementById("planningInProgressAlert")
-                    );
-                    return resultSites;
-                  });
-                });
-              });
-            });
-          });
-        });
+        const nextToVisit = currentNodeEdgeSorted[0];
+        resultSites.push(nextToVisit.node.node);
+        currentNode = nextToVisit.node;
+      }
+      await updateProgressBar(100);
+      console.log(resultSites);
+      resolve(resultSites);
+    } catch (e) {
+      console.error(e);
+      displayPlanArea.classList.add("bg-error");
+      await flipVisibility(document.getElementById("invalidPlanAlert"));
+      await flipVisibility(document.getElementById("planningInProgressAlert"));
+      error(e);
+    }
+  });
+}
+
+/** This function takes in an array of site, and return an HTML string that represent all sites with the card utilities provided by boostrap
+ * @param {Site[]} sites the sites to be displayed
+ * @return {string} the string for the HTML DOM to be rendered */
+export async function sitesToCardOutputToHTML(sites) {
+  return new Promise(async (resolve, error) => {
+    try {
+      let stringToReturn = "";
+      let counter = 1;
+      sites.forEach(async (currentSite) => {
+        stringToReturn += '<div class="card col">\n';
+        stringToReturn += '<div clsss="card-body">\n';
+        stringToReturn +=
+          '<h5 class="card-title">' +
+          counter.toString() +
+          ". " +
+          currentSite.siteName +
+          "</h5>\n";
+        stringToReturn +=
+          '<h6 class="card-subtitle mb-2 text-body-secondary">' +
+          currentSite.commune +
+          ", " +
+          currentSite.region.toString() +
+          "</h6>\n";
+        stringToReturn +=
+          '<p class="card-text">' +
+            checkEmptyString(currentSite.historyDescription) ||
+          !currentSite.historyDescription
+            ? currentSite.historyDescription
+            : "Information not avaiable" + "</p>\n";
+        stringToReturn +=
+          '<p class="card-footer">' +
+          currentSite.timePeriod.toString() +
+          "</p>\n";
+        stringToReturn += "</div>\n</div>\n";
+        ++counter;
       });
-    });
-  } catch (e) {
-    console.error(e);
-    displayPlanArea.classList.add("bg-error");
-    flipVisibility(document.getElementById("invalidPlanAlert"));
-    flipVisibility(document.getElementById("planningInProgressAlert"));
-    return [];
-  }
+      resolve(stringToReturn);
+    } catch (e) {
+      console.error(e);
+      await flipVisibility(document.getElementById("invalidPlanAlert"));
+      await flipVisibility(document.getElementById("planningInProgressAlert"));
+      error(e);
+    }
+  });
 }
