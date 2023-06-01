@@ -9,6 +9,7 @@ import {
   readDataset,
 } from "./datasetProcessing.js";
 import { computePlan, formValidation } from "./queryProcessing.js";
+import { doc } from "prettier";
 
 let startDate = 0;
 let endDate = 0;
@@ -71,6 +72,22 @@ export function getAllTimePeriodsHTMLForm() {
   );
 }
 
+/** This function flips the visibility of an HTML element
+ * @param {HTMLElement} htmlElem the element to be dealt with */
+export function flipVisibility(htmlElem) {
+  try {
+    if (htmlElem.hasAttribute("visible")) {
+      htmlElem.classList.remove("visible");
+      htmlElem.classList.add("invisible");
+    } else {
+      htmlElem.classList.remove("invisible");
+      htmlElem.classList.add("visible");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 document.getElementById("budget").addEventListener("input", function () {
   const budgetRead = document.getElementById("budget").value;
   if (budgetRead) {
@@ -93,7 +110,13 @@ document.getElementById("endDate").addEventListener("change", function () {
 });
 
 document.getElementById("submissionBtn").addEventListener("click", function () {
+  flipVisibility(document.getElementById("planDisplay"));
   if (formValidation()) {
+    window.scrollTo({
+      top: document.getElementById("planDisplay").offsetTop,
+      behavior: "smooth",
+    });
+    flipVisibility(document.getElementById("planningInProgressAlert"));
     computePlan(dataset);
   }
 });
