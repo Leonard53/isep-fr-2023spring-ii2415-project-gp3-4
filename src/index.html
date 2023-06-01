@@ -127,7 +127,14 @@
         </thead>
         <tbody>
           <th scope="row-4"><div id="displayDay">Uninitialized</div></th>
-          <th scope="row-4"><div id="displayBudget">Uninitialized</div></th>
+          <th scope="row-4">
+            <div id="displayBudget">
+              <script>
+                const budgetElem = document.getElementById("budget");
+                displayBudget.innerHTML = budgetElem.value;
+              </script>
+            </div>
+          </th>
         </tbody>
       </table>
     </div>
