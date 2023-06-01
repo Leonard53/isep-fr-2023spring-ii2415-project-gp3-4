@@ -2,6 +2,7 @@ import {
   removeAccentedCharacter,
   checkEmptyString,
 } from "./datasetProcessing.js";
+import { flipVisibility } from "./main.js";
 
 /**
  * This function calculator the distance between two sites using latitude and longitude
@@ -277,9 +278,6 @@ function updateProgressBar(progress) {
  * @param {Site[]} dataset the parsed sites that was read in the beginning
  * @return {Site[]} all sites to be visited in that order */
 export function computePlan(dataset) {
-  const displayPlanArea = document.getElementById("planDisplay");
-  displayPlanArea.classList.remove("invisible");
-  displayPlanArea.classList.add("visible");
   try {
     const allSitesMatchRegions = getAllSitesFromRegions(
       dataset,
@@ -348,6 +346,9 @@ export function computePlan(dataset) {
                   updateProgressBar(100);
                   setTimeout(() => {
                     console.log(resultSites);
+                    flipVisibility(
+                      document.getElementById("planningInProgressAlert")
+                    );
                     return resultSites;
                   });
                 });
@@ -360,6 +361,8 @@ export function computePlan(dataset) {
   } catch (e) {
     console.error(e);
     displayPlanArea.classList.add("bg-error");
+    flipVisibility(document.getElementById("invalidPlanAlert"));
+    flipVisibility(document.getElementById("planningInProgressAlert"));
     return [];
   }
 }

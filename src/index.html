@@ -8,7 +8,7 @@
     <script type="module" src="./js/main.js"></script>
   </head>
   <body>
-    <div class="container p-3 mx-auto">
+    <div class="container p-3 mx-auto visible" id="mainInputForm">
       <form name="inputParam" autocomplete="off">
         <div
           class="row-auto border rounded-3 p-3 m-3"
@@ -166,6 +166,25 @@
         >
           0%
         </div>
+      </div>
+      <div
+        class="alert alert-danger invisible"
+        id="invalidPlanAlert"
+        role="alert"
+      >
+        Cannot generate a proper plan. Try including more locations and
+        interested time periods.
+      </div>
+      <div
+        class="alert alert-info invisible"
+        id="planningInProgressAlert"
+        role="alert"
+      >
+        <div class="spinner-border spinner-border-sm text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Generating your plan in progress, this might take a while if too many
+        preferences are chosen...
       </div>
     </div>
   </body>
