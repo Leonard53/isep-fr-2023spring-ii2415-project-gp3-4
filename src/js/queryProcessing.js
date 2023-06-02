@@ -37,25 +37,6 @@ class Node {
     this.node = siteInfo;
     this.edge = []; // structure: {Node, Distance}
   }
-
-  /** This function remove a specific node from the edge list of the current node
-   * @param {Node} nodeToRemove the node to be removed from the edge */
-  removeFromEdge(nodeToRemove) {
-    for (let i = 0; i < this.edge.length; ++i) {
-      if (
-        removeAccentedCharacter(this.edge[i].node.node.siteName) ==
-        removeAccentedCharacter(nodeToRemove.node.siteName)
-      ) {
-        const newEdgeFirstHalf = this.edge.slice(0, i);
-        const newEdgeSecondHalf = this.edge.slice(i + 1);
-        newEdgeSecondHalf.forEach((currentNode) =>
-          newEdgeFirstHalf.push(currentNode)
-        );
-        this.edge = newEdgeFirstHalf;
-        return;
-      }
-    }
-  }
 }
 
 /** This class stored all the available nodes in the network */
@@ -66,11 +47,6 @@ class Graph {
   }
   /** This function calls each nodes in the graph to remove a specific node from their edges
    * @param {Node} nodeToRemove the node to be removed from the edges of each node */
-  removeFromAllNodesEdge(nodeToRemove) {
-    this.allNodes.forEach((currentNode) => {
-      currentNode.removeFromEdge(nodeToRemove);
-    });
-  }
 }
 
 /** This function computes the distances between all nodes in the graph network
@@ -183,10 +159,8 @@ function getSelectedTimePeriod() {
  * @return {Site[]} sites that only match both the regions and time period selection */
 function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
   const matchingSitesFinal = [];
-  for (let i = 0; i < sitesInRegions.length; ++i) {
-    const currentSite = sitesInRegions[i];
-    for (let j = 0; i < sitesInTimePeriods.length; ++j) {
-      const otherSite = sitesInTimePeriods[j];
+  for (const currentSite of sitesInRegions) {
+    for (const otherSite of sitesInTimePeriods) {
       if (currentSite.siteName == otherSite.siteName) {
         matchingSitesFinal.push(currentSite);
         break;
@@ -282,6 +256,29 @@ async function updateProgressBar(progress) {
   });
 }
 
+/** This function automatically find the next avaiable site to visit that will not result it plan duplication
+ * @param {Site[]} exisitngPlan the array of sites planned already
+ * @param {Node[]} chooseFrom the edhges of a node where the next site will need to be chosen from
+ * @return {Node} the next site to visit */
+async function findNextAvailableSite(exisitngPlan, chooseFrom) {
+  return new Promise((resolve, reject) => {
+    try {
+      if (exisitngPlan.length <= 0 || exisitngPlan === null)
+        return chooseFrom[0];
+      const siteNameOnly = exisitngPlan.map((site) => site.siteName);
+      for (const currentNode of chooseFrom) {
+        if (siteNameOnly.indexOf(currentNode.node.siteName) < 0) {
+          resolve(currentNode);
+        }
+      }
+      reject(new Error("No avaiable site found"));
+    } catch (e) {
+      console.error(e);
+      reject(e);
+    }
+  });
+}
+
 /** This function is the main entry of the algorithm
  * @param {Site[]} dataset the parsed sites that was read in the beginning
  * @return {Site[]} all sites to be visited in that order */
@@ -333,21 +330,21 @@ export async function computePlan(dataset) {
       const resultSites = [currentNode.node];
       await updateProgressBar(65);
       for (let i = 1; i < maxSite; ++i) {
-        graph.removeFromAllNodesEdge(currentNode);
         const currentNodeEdgeSorted = currentNode.edge.sort(
           (edgeCurrentNode, edgeNextNode) =>
             edgeCurrentNode.node.distance - edgeNextNode.node.distance
         );
-        const nextToVisit = currentNodeEdgeSorted[0];
+        const nextToVisit = await findNextAvailableSite(
+          resultSites,
+          currentNodeEdgeSorted
+        );
         resultSites.push(nextToVisit.node.node);
         currentNode = nextToVisit.node;
       }
       await updateProgressBar(100);
-      console.log(resultSites);
       resolve(resultSites);
     } catch (e) {
       console.error(e);
-      displayPlanArea.classList.add("bg-error");
       await flipVisibility(document.getElementById("invalidPlanAlert"));
       await flipVisibility(document.getElementById("planningInProgressAlert"));
       reject(e);
