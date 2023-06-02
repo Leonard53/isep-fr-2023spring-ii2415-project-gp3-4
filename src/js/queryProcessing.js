@@ -183,13 +183,16 @@ function getSelectedTimePeriod() {
  * @return {Site[]} sites that only match both the regions and time period selection */
 function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
   const matchingSitesFinal = [];
-  sitesInRegions.forEach((currentSite) => {
-    sitesInTimePeriods.forEach((otherSite) => {
+  for (let i = 0; i < sitesInRegions.length; ++i) {
+    const currentSite = sitesInRegions[i];
+    for (let j = 0; i < sitesInTimePeriods.length; ++j) {
+      const otherSite = sitesInTimePeriods[j];
       if (currentSite.siteName == otherSite.siteName) {
         matchingSitesFinal.push(currentSite);
+        break;
       }
-    });
-  });
+    }
+  }
   const filterDuplication = matchingSitesFinal.filter(
     (site, index, self) =>
       index == self.findIndex((s) => site.siteName == s.siteName)
