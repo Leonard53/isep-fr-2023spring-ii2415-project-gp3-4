@@ -40,7 +40,7 @@ class Node {
 
   /** This function remove a specific node from the edge list of the current node
    * @param {Node} nodeToRemove the node to be removed from the edge */
-  remoevFromEdge(nodeToRemove) {
+  removeFromEdge(nodeToRemove) {
     for (let i = 0; i < this.edge.length; ++i) {
       if (
         removeAccentedCharacter(this.edge[i].node.node.siteName) ==
@@ -68,7 +68,7 @@ class Graph {
    * @param {Node} nodeToRemove the node to be removed from the edges of each node */
   removeFromAllNodesEdge(nodeToRemove) {
     this.allNodes.forEach((currentNode) => {
-      currentNode.remoevFromEdge(nodeToRemove);
+      currentNode.removeFromEdge(nodeToRemove);
     });
   }
 }
@@ -283,7 +283,7 @@ async function updateProgressBar(progress) {
  * @param {Site[]} dataset the parsed sites that was read in the beginning
  * @return {Site[]} all sites to be visited in that order */
 export async function computePlan(dataset) {
-  return new Promise(async (resolve, error) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const allSitesMatchRegions = getAllSitesFromRegions(
         dataset,
@@ -347,7 +347,7 @@ export async function computePlan(dataset) {
       displayPlanArea.classList.add("bg-error");
       await flipVisibility(document.getElementById("invalidPlanAlert"));
       await flipVisibility(document.getElementById("planningInProgressAlert"));
-      error(e);
+      reject(e);
     }
   });
 }
@@ -356,13 +356,13 @@ export async function computePlan(dataset) {
  * @param {Site[]} sites the sites to be displayed
  * @return {string} the string for the HTML DOM to be rendered */
 export async function sitesToCardOutputToHTML(sites) {
-  return new Promise(async (resolve, error) => {
+  return new Promise(async (resolve, reject) => {
     try {
       let stringToReturn = "";
       let counter = 1;
       sites.forEach(async (currentSite) => {
         stringToReturn += '<div class="card col">\n';
-        stringToReturn += '<div clsss="card-body">\n';
+        stringToReturn += '<div class="card-body">\n';
         stringToReturn +=
           '<h5 class="card-title">' +
           counter.toString() +
@@ -393,7 +393,7 @@ export async function sitesToCardOutputToHTML(sites) {
       console.error(e);
       await flipVisibility(document.getElementById("invalidPlanAlert"));
       await flipVisibility(document.getElementById("planningInProgressAlert"));
-      error(e);
+      reject(e);
     }
   });
 }
