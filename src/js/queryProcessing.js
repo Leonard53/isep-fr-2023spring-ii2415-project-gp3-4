@@ -5,7 +5,7 @@ import {
 import { flipVisibility } from "./main.js";
 
 /**
- * This function calculator the distance between two sites using latitude and longitude
+ * This function calculates the distance between two sites using latitude and longitude
  * @param {float} lat1 Latitude of site 1
  * @param {float} lon1 Longitude of site 1
  * @param {float} lat2 Latitude of site 2
@@ -25,7 +25,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const distance = R * c;
   return distance;
 }
-/** This class act as the basis of the entire graph network */
+/** This class acts as the basis of the entire graph network */
 class Node {
   /** @param {Site} siteInfo takes in a site object */
   constructor(siteInfo) {
@@ -39,7 +39,7 @@ class Node {
   }
 }
 
-/** This class stored all the available nodes in the network */
+/** This class stores all the available nodes in the network */
 class Graph {
   /** @param {Node[]} allNodes array of Node object to be stored */
   constructor(allNodes) {
@@ -76,7 +76,7 @@ function computeEdges(graph) {
 /** This function acts as an filter functions for HTMLCollections since there isn't a native version
  * @param {HTMLCollections} collection the HTMLCollections from getElementsByClassName or getElementsByName
  * @param {function(Any)} condition anonymous function that takes in a statement and output a boolean for the filter funciton
- * @return {Sting[]} ids of the elements that fit the condition specified in the function header */
+ * @return {String[]} ids of the elements that fit the condition specified in the function header */
 function htmlCollectionsFilter(collection, condition) {
   const filtered = [];
   try {
@@ -91,7 +91,7 @@ function htmlCollectionsFilter(collection, condition) {
 }
 
 /** This function returns the number of days the users is going to stay
- * @return {number} the number of day of stay */
+ * @return {number} the number of days of stay */
 function getDay() {
   return parseInt(document.getElementById("displayDay").innerHTML);
 }
@@ -99,7 +99,7 @@ function getDay() {
 /** This function returns the array of sites that are in the specific regions
  * @param {Site[]} dataset all sites that are parsed previously
  * @param {String[]} regions to be matched
- * @return {Site[]} the sites that is in the regions, all elements are unique */
+ * @return {Site[]} the sites that are in the regions, all elements are unique */
 function getAllSitesFromRegions(dataset, regions) {
   const allSites = dataset;
   return [
@@ -132,7 +132,7 @@ function getAllSitesFromTimePeriod(dataset, timePeriods) {
 }
 
 /** This function returns all the selected regions input by the users
- * @return {string[]} array of string of selected regions */
+ * @return {String[]} array of string of selected regions */
 function getSelectedRegions() {
   const allRegions = document.getElementsByClassName("regionsCheckbox");
   const regionFiltered = htmlCollectionsFilter(
@@ -143,7 +143,7 @@ function getSelectedRegions() {
 }
 
 /** This function returns all the selected time periods or themes input by the users
- * @return {string[]} array of string of selected time periods or themes */
+ * @return {String[]} array of string of selected time periods or themes */
 function getSelectedTimePeriod() {
   const allTimePeriod = document.getElementsByClassName("timePeriodCheckbox");
   const timePeriodFiltered = htmlCollectionsFilter(
@@ -155,7 +155,7 @@ function getSelectedTimePeriod() {
 
 /** This function returns sites that only match both the region and the time period selection
  * @param {Site[]} sitesInRegions the sites that match the regions
- * @param {Site[]} sitesInTimePeriods the sites the match the time periods or themes
+ * @param {Site[]} sitesInTimePeriods the sites that match the time periods or themes
  * @return {Site[]} sites that only match both the regions and time period selection */
 function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
   const matchingSitesFinal = [];
@@ -175,7 +175,7 @@ function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
 }
 
 /** this function valid the input from the form and return a boolean based on if all the inputs are valid or not
- * @return {boolean} if true, the inputs of the form is valid, otherwise, false */
+ * @return {boolean} if true, the input of the form is valid, otherwise, false */
 export async function formValidation() {
   return new Promise((resolve) => {
     let isValid = true;
@@ -244,7 +244,7 @@ function computeTotalDistanceAllEdges(node) {
 }
 
 /** This function updates the progress bar that indicate the progress of the algorithm
- * @param {number} progress the progress of the algorithm, from 0 - 100 */
+ * @param {number} progress the progress of the algorithm, ranges from 0 - 100 */
 async function updateProgressBar(progress) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -257,7 +257,7 @@ async function updateProgressBar(progress) {
 }
 
 /** This function automatically find the next avaiable site to visit that will not result it plan duplication
- * @param {Site[]} exisitngPlan the array of sites planned already
+ * @param {Site[]} exisitngPlan the array of sites already planned
  * @param {Node[]} chooseFrom the edhges of a node where the next site will need to be chosen from
  * @return {Node} the next site to visit */
 async function findNextAvailableSite(exisitngPlan, chooseFrom) {
@@ -360,7 +360,7 @@ export async function computePlan(dataset) {
 
 /** This function takes in an array of site, and return an HTML string that represent all sites with the card utilities provided by boostrap
  * @param {Site[]} sites the sites to be displayed
- * @return {string} the string for the HTML DOM to be rendered */
+ * @return {string} the string representing the HTML DOM to be rendered */
 export async function sitesToCardOutputToHTML(sites) {
   return new Promise(async (resolve, reject) => {
     try {
