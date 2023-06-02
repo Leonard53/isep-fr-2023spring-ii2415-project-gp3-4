@@ -8,7 +8,7 @@ export class Site {
    * @param {string} region region of this site
    * @param {string[]} timePeriod time period of what this site represent
    * @param {string} historyDescription description of what this site is about
-   * @param {double} longitude longtitude of this site
+   * @param {double} longitude longitude of this site
    * @param {double} latitude latitude of this site
    */
   constructor(
@@ -55,16 +55,16 @@ export function removeAccentedCharacter(originalStr) {
  * B) Only alphabatical time period; Or,
  * C) Empty
  * If the retrieved data is A, we first remove all characters except for 0-9 and space
- * After that, we seperate the centuries list (if there are multiple centuries given in the database), and for each of the century number occured in the database, we compare the current century number to all the tags in allPeriodTags to see if the current century number we are processing is already in the tag. If not, add it, otherwise, continue to the next item.
+ * After that, we separate the centuries list (if there are multiple centuries given in the database), and for each of the century number occured in the database, we compare the current century number to all the tags in allPeriodTags to see if the current century number we are processing is already in the tag. If not, add it, otherwise, continue to the next item.
  *
- * If the retrived data is B, we first remove all the accents of the time period, seperate the time period by semicolon, and repeat the comparsion process above
+ * If the retrived data is B, we first remove all the accents of the time period, separate the time period by semicolon, and repeat the comparsion process above
  *
  * If the retrived data does not match A or B, or in any of the above processes, fall into the C) catagory, the data is disregarded.
  *
  * @param {String} rawString the raw string to be processed
  * @return {String[]} processedString the array of string that is processed
  */
-function seperateTimePeriod(rawString) {
+function separateTimePeriod(rawString) {
   const processedString = [];
   if (!rawString) return processedString;
   const numeralOnly = rawString.replace(/[^0-9\s]/g, "");
@@ -100,11 +100,11 @@ function seperateTimePeriod(rawString) {
   }
 }
 
-/** The following function will seperate sites with multiple regions, which is seperated with a semicolon in the original string
+/** The following function will separate sites with multiple regions, which is separated with a semicolon in the original string
  * @param {String} rawString the original string to be processed
  * @return {String[]} the processed string that is an array of string with all the regions presented in the original string
  */
-function seperateRegions(rawString) {
+function separateRegions(rawString) {
   if (checkEmptyString(rawString)) return [];
   const allRegions = [];
   rawString.split(";").forEach((currentRegion) => {
@@ -125,15 +125,15 @@ export function readDataset() {
     const actualData = currentSite.fields;
     const siteName = actualData.appellation_courante;
     const commune = removeAccentedCharacter(actualData.commune);
-    const region = seperateRegions(removeAccentedCharacter(actualData.region));
-    const timePeriod = seperateTimePeriod(actualData.siecle);
+    const region = separateRegions(removeAccentedCharacter(actualData.region));
+    const timePeriod = separateTimePeriod(actualData.siecle);
     const historyDescription = actualData.historique;
     const locationDetails = actualData.p_coordonnees;
-    let longtitude = 0;
+    let longitude = 0;
     let latitude = 0;
     locationDetails
-      ? ([longtitude, latitude] = locationDetails)
-      : ([longtitude, latitude] = [0, 0]);
+      ? ([longitude, latitude] = locationDetails)
+      : ([longitude, latitude] = [0, 0]);
     allSites.push(
       new Site(
         siteName,
@@ -141,7 +141,7 @@ export function readDataset() {
         region,
         timePeriod,
         historyDescription,
-        longtitude,
+        longitude,
         latitude
       )
     );

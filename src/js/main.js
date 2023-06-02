@@ -29,7 +29,7 @@ function updateDate(startDate, endDate) {
 }
 
 /**
- * @param {Any[]} arr Any types of array to be converted to Checkboxes in HTML format
+ * @param {Any[]} arr Any types of array to be converted to checkboxes in HTML format
  * @param {String} type The type of what these checkboxes do, for form validation
  * @return {String} the HTML formatted string */
 function arrayToListOfCheckboxesHTML(arr, type = "") {
@@ -62,7 +62,7 @@ export function getAllRegionsHTMLForm() {
 }
 
 /**
- * This function returns the HTML code for creating a bunch of checkboxes for all the time regions all available sites that exist in the dataset for the creation of a proper form
+ * This function returns the HTML code for creating a bunch of checkboxes for all the time regions that exist in the dataset for the creation of a proper form
  * @return {String} the HTML code for all the regions */
 export function getAllTimePeriodsHTMLForm() {
   const allSites = dataset;
@@ -149,7 +149,7 @@ document
       await assertVisibleElement(
         document.getElementById("planningInProgressAlert")
       );
-      /** This function provide a way for the algorithm to finish running before executing other lines */
+      /** This function provides a way for the algorithm to finish running before executing other lines */
       const planResult = await computePlan(dataset);
       const planHTMLOutput = await sitesToCardOutputToHTML(planResult);
       document.getElementById("resultDisplay").innerHTML = planHTMLOutput;
