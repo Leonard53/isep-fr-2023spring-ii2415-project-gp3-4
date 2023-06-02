@@ -14,7 +14,6 @@ import {
 let startDate = 0;
 let endDate = 0;
 const dataset = readDataset();
-console.log("MAIN.JS CALLED");
 
 /** Helper function to update the date difference on screen
  *@param {string} startDate: starting date input by the user
