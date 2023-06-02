@@ -265,9 +265,15 @@ async function findNextAvailableSite(exisitngPlan, chooseFrom) {
     try {
       if (exisitngPlan.length <= 0 || exisitngPlan === null)
         return chooseFrom[0];
-      const siteNameOnly = exisitngPlan.map((site) => site.siteName);
+      const siteNameOnly = exisitngPlan.map((site) =>
+        removeAccentedCharacter(site.siteName)
+      );
       for (const currentNode of chooseFrom) {
-        if (siteNameOnly.indexOf(currentNode.node.siteName) < 0) {
+        if (
+          siteNameOnly.indexOf(
+            removeAccentedCharacter(currentNode.node.node.siteName)
+          ) < 0
+        ) {
           resolve(currentNode);
         }
       }
