@@ -3,20 +3,10 @@ import {
   checkEmptyString,
   removeAccentedCharacter,
   readDataset,
-} from "../src/js/datasetProcessing";
-import { Graph, Node, calculateDistance } from "../src/js/queryProcessing";
-// const datasetProcessing = require("../js/datasetProcessing");
-// const { Site, checkEmptyString, removeAccentedCharacter, readDataset } =
-//   datasetProcessing;
-// type Site = InstanceType<typeof Site>;
-// const queryProcessing = require("../js/queryProcessing");
-// const { Graph, Node, calculateDistance } = queryProcessing;
-// type GraphType = InstanceType<typeof Graph>;
-// type NodeType = InstanceType<typeof Node>;
-// console.log(datasetProcessing);
-// const mocha = require("mocha");
-// const { describe, beforeEach } = mocha;
-// var expect = require("expect.js");
+} from "../lib/js/datasetProcessing";
+import { Graph, Node, calculateDistance } from "../lib/js/queryProcessing";
+const { expect } = require("expect.js");
+import { describe } from "mocha";
 describe("Class Setup", async () => {
   let datasetRead: Site[];
   beforeEach(async () => {
