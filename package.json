@@ -2,7 +2,8 @@
   "scripts": {
     "start": "vite",
     "lint": "npx eslint --fix src/",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "mocha -r ts-node/register './src/test/*.ts'"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.7",
@@ -10,6 +11,11 @@
     "bootstrap-icons": "^1.10.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.2.5",
+    "chai": "^4.3.7",
     "eslint": ">=5.16.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.8.0",

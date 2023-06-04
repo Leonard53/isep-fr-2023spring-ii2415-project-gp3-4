@@ -11,7 +11,7 @@ import { flipVisibility } from "./main.js";
  * @param {float} lat2 Latitude of site 2
  * @param {float} lon2 Longitude of site 2
  * @return {float} distance between site 1 and site 2 */
-function calculateDistance(lat1, lon1, lat2, lon2) {
+export function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the Earth in km
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -26,7 +26,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return distance;
 }
 /** This class acts as the basis of the entire graph network */
-class Node {
+export class Node {
   /** @param {Site} siteInfo takes in a site object */
   constructor(siteInfo) {
     if (
@@ -40,7 +40,7 @@ class Node {
 }
 
 /** This class stores all the available nodes in the network */
-class Graph {
+export class Graph {
   /** @param {Node[]} allNodes array of Node object to be stored */
   constructor(allNodes) {
     this.allNodes = allNodes;
