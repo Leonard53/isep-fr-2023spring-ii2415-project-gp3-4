@@ -2,16 +2,13 @@
 
 ## Initial Installation
 
-- Requirement: yarn, git-lfs (Git Large File System)
-- Installation (macOS): `brew install node yarn git-lfs`
+- Requirement: yarn
+- Installation (macOS): `brew install node yarn`
 - Command (Must run before proceeding!):
 
 ``` bash
     # To install node server dependencies
     yarn
-
-    # To fetch the dataset from lfs
-    git lfs fetch
 ```
 
 ## Bootstrap Docs
@@ -23,9 +20,11 @@ This project utilizes the Bootstrap framework for website building\
 Located under `src/frAllMonumentsDataset.csv`\
 Provided by the government of France\
 
-### Note that because of GitHub restrictions, git-lfs might reject pulling request if bandwidth usage exceeds monthly allowance
+**Note that because of GitHub restrictions, git-lfs is no longer in use as lfs bandwidth usage has exceeded monthly allowance**\
 
-_In the case of `git lfs fetch` rejection, download the database in JSON format on the [French Government Website](https://www.data.gouv.fr/fr/datasets/r/0dca8af6-fb5e-42d8-970f-2b369fe7e421), then put the JSON file under `src/frAllMonumentsDataset.json` (as shown in the git repo structure)_.
+_Download the database in JSON format on the [French Government Website](https://www.data.gouv.fr/fr/datasets/r/0dca8af6-fb5e-42d8-970f-2b369fe7e421), then put the JSON file under `src/frAllMonumentsDataset.json` (as shown in the git repo structure)_.\
+
+You can also fetch the JSON with `yarn fetchJSON` **(RECOMMENDED)**
 
 ## Local Preview
 
