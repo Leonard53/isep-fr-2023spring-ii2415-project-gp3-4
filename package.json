@@ -1,12 +1,12 @@
 {
   "scripts": {
     "fetchJSON": "echo \"Fetching JSON due to missing databse\n\" && curl -L https://www.data.gouv.fr/fr/datasets/r/0dca8af6-fb5e-42d8-970f-2b369fe7e421 --output src/frAllMonumentsDataset.json",
-    "start": "if [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tnpx vite\nelse\n\tyarn fetchJSON\n\tnpx vite\nfi",
+    "start": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tnpx vite\nelse\n\tyarn fetchJSON\n\tnpx vite\nfi",
     "lint": "npx eslint --fix src/",
     "prepare": "husky install",
     "compile": "npx tsc; ln -f src/frAllMonumentsDataset.json lib/src/; mkdir -p lib/src/scss; ln -f src/scss/styles.scss lib/src/scss/",
-    "test": "if [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi; yarn compile; npx vitest run --config vitest.config.ts",
-    "build": "if [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi && npx vite build"
+    "test": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi; yarn compile; npx vitest run --config vitest.config.ts",
+    "build": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi && yarn compile"
   },
   "directories": {
     "lib": "./src",
