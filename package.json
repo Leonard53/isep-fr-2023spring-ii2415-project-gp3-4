@@ -4,9 +4,9 @@
     "start": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tnpx vite\nelse\n\tyarn fetchJSON\n\tnpx vite\nfi",
     "lint": "npx eslint --fix src/",
     "prepare": "husky install",
-    "compile": "npx tsc; ln -f src/frAllMonumentsDataset.json lib/src/; mkdir -p lib/src/scss; ln -f src/scss/styles.scss lib/src/scss/; npx vite build",
+    "compile": "npx tsc; ln -f src/frAllMonumentsDataset.json lib/src/; mkdir -p lib/src/scss; ln -f src/scss/styles.scss lib/src/scss/",
     "test": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi; yarn compile; npx vitest run --config vitest.config.ts",
-    "build": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi && yarn compile"
+    "build": "if ! [ -f \"src/frAllMonumentsDataset.json\" ]; then\n\tyarn fetchJSON\nfi && npx vite build"
   },
   "directories": {
     "lib": "./src",
