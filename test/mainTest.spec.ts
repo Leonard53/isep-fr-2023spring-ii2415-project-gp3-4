@@ -45,10 +45,21 @@ it("Should be able to calculate distances between two points based on their long
   const lon1: number = 10.0;
   const lon2: number = 20.0;
   const distanceOutput = calculateDistance(lat1, lon1, lat2, lon2);
-  expect(distanceOutput).eq(
-    Math.acos(
-      Math.sin(10.0) * Math.sin(20.0) +
-        Math.cos(10.0) * Math.cos(20.0) * Math.cos(20.0 - 10.0)
-    ) * 6371
-  );
+  const conversionToRadian: (arg0: number) => number = (deg) =>
+    (deg * Math.PI) / 180;
+  const dLat: number = conversionToRadian(lat2 - lat1);
+  const dLon: number = conversionToRadian(lon2 - lon1);
+  const lat1Rad: number = conversionToRadian(lat1);
+  const lat2Rad: number = conversionToRadian(lat2);
+  const a: number =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1Rad) *
+      Math.cos(lat2Rad) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c: number = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const expectedDistamce: number = 6371 * c;
+  expect(distanceOutput).eq(expectedDistamce);
+  const reverseDistance: number = calculateDistance(lat2, lon2, lat1, lon1);
+  expect(reverseDistance).eq(distanceOutput); // Should be the same the other way around
 });
