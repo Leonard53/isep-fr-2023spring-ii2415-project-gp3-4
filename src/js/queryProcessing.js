@@ -2,7 +2,6 @@ import {
   removeAccentedCharacter,
   checkEmptyString,
 } from "./datasetProcessing.js";
-import { flipVisibility } from "./main.js";
 
 /**
  * This function calculates the distance between two sites using latitude and longitude
@@ -351,8 +350,6 @@ export async function computePlan(dataset) {
       resolve(resultSites);
     } catch (e) {
       console.error(e);
-      await flipVisibility(document.getElementById("invalidPlanAlert"));
-      await flipVisibility(document.getElementById("planningInProgressAlert"));
       reject(e);
     }
   });
