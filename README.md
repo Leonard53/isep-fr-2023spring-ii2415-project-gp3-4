@@ -32,6 +32,10 @@ Execute the following command in terminal\
 `npm start`\
 The website will be compiled with Vite and launched on `http://127.0.0.1:8080/`
 
+## Testing Suite
+
+This project use `vitest` for testing. Run `yarn test` to run the test.
+
 ## NOTE: BEFORE PUSHING
 
 Execute the following command to lint and format the code to keep some consistency\
