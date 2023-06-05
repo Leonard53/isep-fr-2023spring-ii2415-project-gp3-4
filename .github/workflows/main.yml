@@ -7,6 +7,8 @@ jobs:
     steps:
       - name: Checking out Branch
         uses: actions/checkout@v3
+        continue-on-error: true
+        id: checkoutStep
         with:
           lfs: true
       - name: Setting up nodeJS
@@ -14,8 +16,13 @@ jobs:
         with:
           node-version: latest
       - name: Installing dependencies
-        run: npm install
+        run: yarn
+      - name: Fetching JSON Database if git lfs isn't available
+        if: steps.checkoutStep.conclusion == failure
+        run: yarn fetchJSON
       - name: Compilling with Vite
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-        run: npx vite build
+        run: yarn build
+      - name: Testing with Vite
+        run: yarn test
