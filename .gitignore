@@ -4,3 +4,4 @@ node_modules
 dist
 yarn-error.log
 lib
+src/frAllMonumentsDataset.json
