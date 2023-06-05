@@ -7,15 +7,12 @@ jobs:
     steps:
       - name: Checking out Branch
         uses: actions/checkout@v3
-        continue-on-error: true
       - name: Setting up nodeJS
         uses: actions/setup-node@v3
         with:
           node-version: latest
       - name: Installing dependencies
         run: yarn
-      - name: Fetching JSON Database
-        run: yarn fetchJSON
       - name: Compilling with Vite
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
