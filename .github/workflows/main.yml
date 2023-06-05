@@ -8,17 +8,13 @@ jobs:
       - name: Checking out Branch
         uses: actions/checkout@v3
         continue-on-error: true
-        id: checkoutStep
-        with:
-          lfs: true
       - name: Setting up nodeJS
         uses: actions/setup-node@v3
         with:
           node-version: latest
       - name: Installing dependencies
         run: yarn
-      - name: Fetching JSON Database if git lfs isn't available
-        if: steps.checkoutStep.conclusion == "failure"
+      - name: Fetching JSON Database
         run: yarn fetchJSON
       - name: Compilling with Vite
         env:
