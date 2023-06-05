@@ -18,7 +18,7 @@ jobs:
       - name: Installing dependencies
         run: yarn
       - name: Fetching JSON Database if git lfs isn't available
-        if: steps.checkoutStep.conclusion == failure
+        if: steps.checkoutStep.conclusion == "failure"
         run: yarn fetchJSON
       - name: Compilling with Vite
         env:
