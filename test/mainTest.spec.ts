@@ -5,6 +5,7 @@ import {
   calculateDistance,
   getAllSitesFromRegions,
   getAllSitesFromTimePeriod,
+  computeEdges,
 } from "../lib/src/js/queryProcessing.js";
 import { expect, beforeEach, it } from "vitest";
 let datasetRead: Site[];
@@ -154,5 +155,30 @@ it("Should be able to filter out only a specific time period from all sites", as
       (matchedSite: Site) => matchedSite.timePeriod == timePeriodToBeMatched
     )
   ).toBe(true);
-  expect();
+});
+it("Should be able to calculate the distance between a node and its other edges", async () => {
+  const exampleSites: Site[] = [];
+  const [lat1, lon1, lat2, lon2, lat3, lon3] = [1, 1, 1, 2, 1, 3];
+  exampleSites.push(
+    siteCreationWrapper({ siteName: "A", longitude: lon1, latitude: lat1 })
+  );
+  exampleSites.push(
+    siteCreationWrapper({ siteName: "B", longitude: lon2, latitude: lat2 })
+  );
+  exampleSites.push(
+    siteCreationWrapper({ siteName: "C", longitude: lon3, latitude: lat3 })
+  );
+  const exampleNode: Node[] = exampleSites.map((site) => new Node(site));
+  const exampleGraph: Graph = new Graph(exampleNode);
+  await computeEdges(exampleGraph);
+  console.log(exampleNode);
+  console.log(exampleGraph);
+  const betweenNodeOneAndTwo = calculateDistance(lat1, lon1, lat2, lon2);
+  const betweenNodeOneAndThree = calculateDistance(lat1, lon1, lat3, lon3);
+  const betweenNodeTwoAndThree = calculateDistance(lat2, lon2, lat3, lon3);
+  expect(exampleNode.every((node) => node.edge.length == 2)).toBe(true);
+  expect(exampleNode[0].edge[0].distance).toBe(betweenNodeOneAndTwo);
+  expect(exampleNode[0].edge[1].distance).toBe(betweenNodeOneAndThree);
+  expect(exampleNode[1].edge[0].distance).toBe(betweenNodeOneAndTwo);
+  expect(exampleNode[1].edge[1].distance).toBe(betweenNodeTwoAndThree);
 });

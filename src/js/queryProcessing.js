@@ -50,25 +50,28 @@ export class Graph {
 
 /** This function computes the distances between all nodes in the graph network
  * @param {Graph} graph an object of graph. Note that the nodes in allNodes will be changed upon calling this function */
-function computeEdges(graph) {
-  graph.allNodes.map((currentNode) => {
-    const everyOtherNodes = graph.allNodes.filter((tempNode) => {
-      return tempNode.node.siteName != currentNode.node.siteName;
-    });
-    // Computing distance between the current node and all the other node in the network
-    everyOtherNodes.forEach((otherNode) => {
-      const distance = parseFloat(
-        calculateDistance(
-          currentNode.node.latitude,
-          currentNode.node.longitude,
-          otherNode.node.latitude,
-          otherNode.node.longitude
-        )
-      );
-      currentNode.edge.push({
-        node: otherNode,
-        distance: distance,
+export async function computeEdges(graph) {
+  return new Promise((resolve) => {
+    graph.allNodes.map((currentNode) => {
+      const everyOtherNodes = graph.allNodes.filter((tempNode) => {
+        return tempNode.node.siteName != currentNode.node.siteName;
       });
+      // Computing distance between the current node and all the other node in the network
+      everyOtherNodes.forEach((otherNode) => {
+        const distance = parseFloat(
+          calculateDistance(
+            currentNode.node.latitude,
+            currentNode.node.longitude,
+            otherNode.node.latitude,
+            otherNode.node.longitude
+          )
+        );
+        currentNode.edge.push({
+          node: otherNode,
+          distance: distance,
+        });
+      });
+      resolve();
     });
   });
 }
@@ -156,7 +159,7 @@ function getSelectedTimePeriod() {
  * @param {Site[]} sitesInRegions the sites that match the regions
  * @param {Site[]} sitesInTimePeriods the sites that match the time periods or themes
  * @return {Site[]} sites that only match both the regions and time period selection */
-function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
+export function filterSitesIntersection(sitesInRegions, sitesInTimePeriods) {
   const matchingSitesFinal = [];
   for (const currentSite of sitesInRegions) {
     for (const otherSite of sitesInTimePeriods) {
@@ -236,7 +239,7 @@ export async function formValidation() {
 /** This funciton calculates the distance between itself and other nodes connected through edges.
  * @param {Node} node the starting node
  * @return {float} the total distance between itself and all other edges connected to the current node*/
-function computeTotalDistanceAllEdges(node) {
+export function computeTotalDistanceAllEdges(node) {
   let distanceCount = 0;
   node.edge.forEach((currentEdge) => (distanceCount += currentEdge.distance));
   return distanceCount;
@@ -310,7 +313,7 @@ export async function computePlan(dataset) {
         .filter((currentNode) => Object.keys(currentNode).length > 0);
       await updateProgressBar(30);
       const graph = new Graph(nodes);
-      computeEdges(graph);
+      await computeEdges(graph);
       await updateProgressBar(40);
       graph.allNodes.sort(
         (currentNode, nextNode) =>
