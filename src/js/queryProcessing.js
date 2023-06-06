@@ -99,7 +99,7 @@ function getDay() {
  * @param {Site[]} dataset all sites that are parsed previously
  * @param {String[]} regions to be matched
  * @return {Site[]} the sites that are in the regions, all elements are unique */
-function getAllSitesFromRegions(dataset, regions) {
+export function getAllSitesFromRegions(dataset, regions) {
   const allSites = dataset;
   return [
     ...new Set( // filter out duplicating sites
@@ -116,7 +116,7 @@ function getAllSitesFromRegions(dataset, regions) {
  * @param {Site[]} dataset all sites that are parsed previously
  * @param {String[]} timePeriods time periods / themes to be matched
  * @return {Site[]} the sites that match the time periods / themes, all elements are unique */
-function getAllSitesFromTimePeriod(dataset, timePeriods) {
+export function getAllSitesFromTimePeriod(dataset, timePeriods) {
   const allSites = dataset;
   return [
     ...new Set( // filter out duplicating sites
